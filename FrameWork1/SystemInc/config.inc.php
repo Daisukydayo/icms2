@@ -29,6 +29,7 @@ $incDomain = array();
 $incDomain['webapp'] = 'http://localhost';
 $incDomain['manage'] = 'http://localhost';
 
+
 /**
  * 是否开启管理日志
  */
