@@ -33,6 +33,9 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
             case "list_of_collection":
                 $result = self::GenListOfCollection();
                 break;
+            case "search_for_manage":
+                $result = self::GenSearchForManage();
+                break;
             case "async_publish":
                 $result = self::AsyncPublish();
                 break;
@@ -966,9 +969,99 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
         parent::ReplaceEnd($templateContent);
         return $templateContent;
     }
+    /**
+     * 生成资讯搜索管理列表页面
+     */
+    private function GenSearchForManage()
+    {
+        $siteId = Control::GetRequest("site_id", 0);
+        $lastDocumentNewsId=Control::GetRequest("last_document_news_id", 999999999);
+        $manageUserName=Control::GetRequest("manage_user_name", "");
+        $userName=Control::GetRequest("user_name", "");
+        $beginDate=Control::GetRequest("begin_date", "");
+        $endDate=Control::GetRequest("end_date", "");
+
+        $manageUserId = Control::GetManageUserId();
+
+        ///////////////判断是否有操作权限///////////////////
+        $manageUserAuthorityManageData = new ManageUserAuthorityManageData();
+        $canExplore = $manageUserAuthorityManageData->CanChannelExplore($siteId, 0, $manageUserId);
+        if (!$canExplore) {
+            //die(Language::Load('channel', 4));
+        }
+
+        //load template
+        $templateContent = Template::Load("document/document_news_search.html", "common");
+
+
+        parent::ReplaceFirst($templateContent);
+
+
+        $pageSize = Control::GetRequest("ps", 20);
+        $searchKey = Control::GetRequest("search_key", "");
+        $searchKey = urldecode($searchKey);
+
+        $searchKey = str_ireplace("　"," ",$searchKey);//多个关键字空格隔开
+        $arrayOfSearchKey=explode(" ",$searchKey);
+        if(count($arrayOfSearchKey)<=1){
+            $arrayOfSearchKey=null;
+        }
+
+
+        //$searchType = Control::GetRequest("search_type", -1);
+        //$sort = Control::GetRequest("sort", "");
+        //$hit = Control::GetRequest("hit", "");
+
+        if (isset($searchKey) && strlen($searchKey) > 0) {
+            $canSearch = $manageUserAuthorityManageData->CanChannelSearch($siteId, 0, $manageUserId);
+            if (!$canSearch) {
+                //die(Language::Load('channel', 4));
+            }
+        }
+
+
+        $templateContent = str_ireplace("{ManageUserId}", $siteId, $templateContent);
+        $templateContent = str_ireplace("{SiteId}", $siteId, $templateContent);
+        $tagId = "document_news_list";
+        $isSelf = Control::GetRequest("is_self", 0);
+        $documentNewsManageData = new DocumentNewsManageData();
+        $arrDocumentNewsList = $documentNewsManageData->GetSearchListForManage(
+            $siteId,
+            $pageSize,
+            $lastDocumentNewsId,
+            $searchKey,
+            $arrayOfSearchKey,
+            $manageUserName,
+            $userName,
+            $beginDate,
+            $endDate,
+            0 //manage user id
+        );
+
+        $lengthCount=count($arrDocumentNewsList);
+        if ($lengthCount > 0) {
+            Template::ReplaceList($templateContent, $arrDocumentNewsList, $tagId);
+            $templateContent = str_ireplace("{pager_button}", "", $templateContent);
+            $templateContent = str_ireplace("{LastDocumentNewsId}", $arrDocumentNewsList[$lengthCount-1]["DocumentNewsId"], $templateContent);
+
+        } else {
+            Template::RemoveCustomTag($templateContent, $tagId);
+            $templateContent = str_ireplace("{pager_button}", Language::Load("document", 7), $templateContent);
+            $templateContent = str_ireplace("{LastDocumentNewsId}", "", $templateContent);
+        }
+
+        $templateContent = str_ireplace("{SearchKey}", $searchKey, $templateContent);
+        $templateContent = str_ireplace("{ManageUserName}", $manageUserName, $templateContent);
+        $templateContent = str_ireplace("{UserName}", $userName, $templateContent);
+        $templateContent = str_ireplace("{BeginDate}", $beginDate, $templateContent);
+        $templateContent = str_ireplace("{EndDate}", $endDate, $templateContent);
+        parent::ReplaceEnd($templateContent);
+        return $templateContent;
+    }
+
 
     /**
-     * 生成资讯管理列表页面
+     * 生成集合资讯管理列表页面
      */
     private function GenListOfCollection(){
         $channelId = Control::GetRequest("channel_id", 0);

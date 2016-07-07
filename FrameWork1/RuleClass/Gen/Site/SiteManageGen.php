@@ -32,6 +32,9 @@ class SiteManageGen extends BaseManageGen implements IBaseManageGen
             case "async_modify_state":
                 $result = self::AsyncModifyState();
                 break;
+            case "async_get_site_url":
+                $result = self::AsyncGetSiteUrl();
+                break;
         }
 
         $result = str_ireplace("{method}", $method, $result);
@@ -244,6 +247,25 @@ class SiteManageGen extends BaseManageGen implements IBaseManageGen
             }
         }
         return Control::GetRequest("jsonpcallback", "") . '({"result":' . $result . '})';
+    }
+
+
+
+    /**
+     * 修改文档状态 状态值定义在Data类中
+     * @return string 返回Jsonp修改结果
+     */
+    private function AsyncGetSiteUrl()
+    {
+        $result = "";
+        $siteId = Control::GetRequest("site_id", 0);
+        $manageUserId = Control::GetManageUserId();
+
+        if ($siteId > 0 && $manageUserId > 0) {
+            $siteManageData = new SiteManageData();
+            $result = $siteManageData->GetSiteUrl($siteId, false);
+        }
+        return Control::GetRequest("jsonpcallback", "") . '({"result":"' . $result . '"})';
     }
 
 

@@ -665,9 +665,10 @@
 									<tr>
 										<td class="spe_line" style="width:120px;height:35px;text-align: left;"><label
 													for="f_DirectUrl">直接转向网址：</label></td>
-										<td class="spe_line" style="text-align: left"><input type="text" class="input_box" id="f_DirectUrl"
+										<td class="spe_line" style="text-align: left"><input type="text" class="input_box input_title" id="f_DirectUrl"
 										                                                     name="f_DirectUrl" value="{DirectUrl}"
 										                                                     style=" width: 70%;font-size:14px;" maxlength="200"/>
+                                            <div id="length_f_DirectUrl" style="line-height:20px"></div>
 										</td>
 									</tr>
 								</table>

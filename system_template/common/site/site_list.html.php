@@ -89,6 +89,14 @@
                 parent.G_TabTitle = siteName + '-站点评论';
                 parent.addTab();
             });
+            $(".span_document_search_for_manage").click(function (event) {
+                event.preventDefault();
+                var siteId=$(this).attr("idvalue");
+                var siteName=$(this).attr("title");
+                parent.G_TabUrl = '/default.php?secu=manage&mod=document_news&m=search_for_manage&site_id=' + siteId;
+                parent.G_TabTitle = siteName + '-稿件检索';
+                parent.addTab();
+            });
 
 
             //格式化站点状态
@@ -211,6 +219,7 @@
                                 <span class="span_site_manage_comment" style="width:50px;margin:0 10px 0 10px;cursor:pointer" idvalue="{f_SiteId}" title="{f_SiteName}">评论管理</span>
                                 <span class="span_site_template_library" style="width:50px;margin:0 10px 0 10px;cursor:pointer" idvalue="{f_SiteId}" title="{f_SiteName}">模板库</span>
                                 <span class="span_site_tag" style="width:50px;margin:0 10px 0 10px;cursor:pointer" idvalue="{f_SiteId}" title="{f_SiteName}">关键字</span>
+                                <span class="span_document_search_for_manage" style="width:50px;margin:0 10px 0 10px;cursor:pointer" idvalue="{f_SiteId}" title="{f_SiteName}">稿件检索</span>
 
                             </td>
                         </tr>

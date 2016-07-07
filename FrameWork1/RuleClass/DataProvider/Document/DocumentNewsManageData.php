@@ -371,6 +371,8 @@ class DocumentNewsManageData extends BaseManageData
     }
 
 
+
+
     public function GetListOfCollection(
         $channelIds,
         $pageBegin,
@@ -455,6 +457,122 @@ class DocumentNewsManageData extends BaseManageData
 
 
     }
+
+
+
+    /**
+     * 取得后台资讯列表数据集
+     * @param int $siteId 频道id
+     * @param int $pageSize 页大小
+     * @param int $lastId 上一页最后的id（优化查询）
+     * @param string $searchKey 查询字符
+     * @param array $arrayOfSearchKey 多个查询字符 情况
+     * @param string $manageUserName 发稿人
+     * @param string $userName 投稿人
+     * @param string $beginDate 起始时间
+     * @param string $endDate 结束时间
+     * @param int $manageUserId 查显示某个后台管理员id
+     * @param int $state 状态
+     * @return array 资讯列表数据集
+     */
+    public function GetSearchListForManage(
+        $siteId,
+        $pageSize,
+        $lastId,
+        $searchKey,
+        $arrayOfSearchKey,
+        $manageUserName = "",
+        $userName="",
+        $beginDate="",
+        $endDate="",
+        $manageUserId = 0,
+        $state=30
+
+    )
+    {
+        $dataProperty = new DataProperty();
+
+        $conditionSiteId="";
+        if($siteId>0){
+            $conditionSiteId=" AND SiteId=:SiteId ";
+            $dataProperty->AddField("SiteId", $siteId);
+        }
+
+        $searchSql = "";
+        if($arrayOfSearchKey!=null){ //标题 多个关键字
+            foreach($arrayOfSearchKey as $oneSearchKey){
+                if($oneSearchKey!=""){
+                    $searchSql .= " AND DocumentNewsTitle like '%$oneSearchKey%' ";
+                }
+            }
+            $searchSql=substr($searchSql,4);//去掉第一个 AND
+            $searchSql=" AND ( ".$searchSql;//加上括号
+            $searchSql.=" ) ";
+        }elseif (strlen($searchKey) > 0 && $searchKey != "undefined") {//标题 一个关键字
+                $searchSql = " AND (DocumentNewsTitle like :SearchKey)";
+                $dataProperty->AddField("SearchKey", "%" . $searchKey . "%");
+        }
+
+        $conditionManageUserName="";
+        if(strlen($manageUserName)>0&& $manageUserName != "undefined"){ //发稿人
+            $conditionManageUserName=" AND (ManageUserName = :ManageUserName)";
+            $dataProperty->AddField("ManageUserName", $manageUserName);
+        }
+
+        $conditionUserName="";
+        if(strlen($userName)>0&& $userName != "undefined"){ //投稿人
+            $conditionUserName=" AND (UserName = :UserName)";
+            $dataProperty->AddField("UserName", $userName);
+        }
+
+        $conditionBeginDate="";
+        if(strlen($beginDate)>0&& $beginDate != "undefined"){ //起始时间
+            $conditionBeginDate=" AND (PublishDate > :BeginDate)";
+            $dataProperty->AddField("BeginDate", $beginDate);
+        }
+
+        $conditionEndDate="";
+        if(strlen($endDate)>0&& $endDate != "undefined"){ //结束时间
+            $conditionEndDate=" AND (PublishDate < :EndDate)";
+            $dataProperty->AddField("EndDate", $endDate);
+        }
+
+        $conditionState="";
+        if($state>0){ //状态  默认已发
+            $conditionState=" AND (State = $state) ";
+        }
+
+
+
+        if ($manageUserId > 0) {
+            $conditionManageUserId = ' AND ManageUserId=' . intval($manageUserId);
+        } else {
+            $conditionManageUserId = "";
+        }
+
+        $sql = "
+            SELECT
+            DocumentNewsId,DocumentNewsTitle,DocumentNewsIntro,SiteId,ChannelId,PublishDate,
+            CreateDate,ManageUserId,ManageUserName,UserName
+            FROM
+            " . self::TableName_DocumentNews . "
+            WHERE DocumentNewsId<".$lastId."  ".
+            $searchSql . " " .
+            $conditionState . " " .
+            $conditionSiteId . " " .
+            $conditionManageUserName. " " .
+            $conditionUserName. " " .
+            $conditionBeginDate. " " .
+            $conditionEndDate. " " .
+            $conditionManageUserId . " " .
+            "ORDER BY DocumentNewsId DESC , CreateDate DESC LIMIT " . $pageSize . ";";
+
+        $result = $this->dbOperator->GetArrayList($sql, $dataProperty);
+
+        return $result;
+    }
+
+
 
     /**
      * 修改排序
