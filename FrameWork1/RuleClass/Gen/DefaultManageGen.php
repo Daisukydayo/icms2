@@ -370,7 +370,11 @@ class DefaultManageGen extends BaseManageGen implements IBaseManageGen {
 
                 case "del_all_cache":
                     parent::DelAllCache();
-                    echo "deleted";
+                    echo "deleted!";
+                    break;
+                case "test":
+                    echo "test ";
+                    die();
                     break;
                 default :
                     $result = self::GenDefault();
