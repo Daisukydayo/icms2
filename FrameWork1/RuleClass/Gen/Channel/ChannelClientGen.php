@@ -65,7 +65,7 @@ class ChannelClientGen extends BaseClientGen implements IBaseClientGen {
         }
         return '{"result_code":"'.$resultCode.'","channel":{"channel_list":' . $result . '}}';
     }
-gdgd
+
     /**
      * 根据频道类型返回频道数据集
      * @return array 频道数据集
