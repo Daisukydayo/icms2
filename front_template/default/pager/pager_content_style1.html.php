@@ -1,1 +1,1 @@
-<div class="{BoxStyle}"><a href="{Index}">{IndexContent}</a></div>
+<div class="{BoxStyle}" idvalue="{IndexContent}"><a href="{Index}">{IndexContent}</a></div>

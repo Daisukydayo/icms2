@@ -980,6 +980,7 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
         $userName=Control::GetRequest("user_name", "");
         $beginDate=Control::GetRequest("begin_date", "");
         $endDate=Control::GetRequest("end_date", "");
+        $state=Control::GetRequest("state", "0");
 
         $manageUserId = Control::GetManageUserId();
 
@@ -1020,8 +1021,10 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
         }
 
 
+
         $templateContent = str_ireplace("{ManageUserId}", $siteId, $templateContent);
         $templateContent = str_ireplace("{SiteId}", $siteId, $templateContent);
+        $templateContent = str_ireplace("{State}", $state, $templateContent);
         $tagId = "document_news_list";
         $isSelf = Control::GetRequest("is_self", 0);
         $documentNewsManageData = new DocumentNewsManageData();
@@ -1035,7 +1038,8 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
             $userName,
             $beginDate,
             $endDate,
-            0 //manage user id
+            0, //manage user id
+            $state
         );
 
         $lengthCount=count($arrDocumentNewsList);

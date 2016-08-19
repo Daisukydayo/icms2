@@ -619,34 +619,7 @@ class ChannelManageData extends BaseManageData
                         c.State<100 AND c.SiteId=:SiteId AND c.Invisible=0
                         ORDER BY ".$order." ;";
             } else {
-                $sql = "SELECT
-                            c.ChannelId,
-                            c.ParentId,
-                            c.ChannelType,
-                            c.ChannelName,
-                            c.Rank,
-                            (SELECT COUNT(*) FROM " . self::TableName_Channel . " WHERE ParentId=c.ChannelId AND State<100 AND Invisible=0) AS ChildCount
-                        FROM " . self::TableName_Channel . " c
-                        WHERE
-                            c.State<100 AND c.SiteId=:SiteId AND c.Invisible=0
-                            AND c.ChannelId in
-                                ( SELECT ChannelId FROM " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND ManageUserId=:ManageUserId
-                                  UNION
-                                  SELECT ChannelId FROM " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND ManageUserGroupId IN (SELECT ManageUserGroupId FROM " . self::TableName_ManageUser . " WHERE ManageUserId=:ManageUserId2)
-                                  UNION
-                                  SELECT ChannelId FROM " . self::TableName_Channel . " WHERE SiteId IN (SELECT SiteId from " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND SiteId=:SiteId2 AND ChannelId=0 AND ManageUserId=:ManageUserId4 AND ManageUserGroupId = 0)
-                                  UNION
-                                  SELECT ChannelId FROM " . self::TableName_Channel . " WHERE SiteId IN (SELECT SiteId from " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND SiteId=:SiteId3 AND ChannelId=0 AND ManageUserId=0 AND ManageUserGroupId IN (SELECT ManageUserGroupId FROM ".self::TableName_ManageUser." WHERE ManageUserId=:ManageUserId5))
-
-                                )
-                        ORDER BY ".$order." ;";
-                $dataProperty->AddField("ManageUserId", $manageUserId);
-                $dataProperty->AddField("ManageUserId2", $manageUserId);
-                //$dataProperty->AddField("ManageUserId3", $manageUserId);
-                $dataProperty->AddField("ManageUserId4", $manageUserId);
-                $dataProperty->AddField("ManageUserId5", $manageUserId);
-                $dataProperty->AddField("SiteId2", $siteId);
-                $dataProperty->AddField("SiteId3", $siteId);
+//优化前
 //                $sql = "SELECT
 //                            c.ChannelId,
 //                            c.ParentId,
@@ -677,9 +650,80 @@ class ChannelManageData extends BaseManageData
 //                $dataProperty->AddField("ManageUserId5", $manageUserId);
 //                $dataProperty->AddField("SiteId2", $siteId);
 //                $dataProperty->AddField("SiteId3", $siteId);
+
+
+                if($manageUserId==105){
+//去掉一行查询第一次优化
+                    $sql = "SELECT
+                            c.ChannelId,
+                            c.ParentId,
+                            c.ChannelType,
+                            c.ChannelName,
+                            c.Rank,
+                            (SELECT COUNT(*) FROM " . self::TableName_Channel . " WHERE ParentId=c.ChannelId AND State<100 AND Invisible=0) AS ChildCount
+                        FROM " . self::TableName_Channel . " c
+                        WHERE
+                            c.State<100 AND c.SiteId=:SiteId AND c.Invisible=0
+                            AND c.ChannelId in
+                                ( SELECT ChannelId FROM " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND ManageUserId=:ManageUserId
+                                  UNION
+                                  SELECT ChannelId FROM " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND ManageUserGroupId IN (SELECT ManageUserGroupId FROM " . self::TableName_ManageUser . " WHERE ManageUserId=:ManageUserId2)
+                                  UNION
+                                  SELECT ChannelId FROM " . self::TableName_Channel . " WHERE SiteId IN (SELECT SiteId from " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND SiteId=:SiteId2 AND ChannelId=0 AND ManageUserId=:ManageUserId4 AND ManageUserGroupId = 0)
+                                  UNION
+                                  SELECT ChannelId FROM " . self::TableName_Channel . " WHERE SiteId IN (SELECT SiteId from " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND SiteId=:SiteId3 AND ChannelId=0 AND ManageUserId=0 AND ManageUserGroupId IN (SELECT ManageUserGroupId FROM ".self::TableName_ManageUser." WHERE ManageUserId=:ManageUserId5))
+
+                                )
+                        ORDER BY ".$order." ;";
+                    $debug=new DebugLogManageData();
+                    $debug->Create("site:".$siteId.";id:".$manageUserId);
+                    $debug->Create("old:".$sql);
+                }else{
+
+
+
+                    $sql = "SELECT
+	                      c.ChannelId,
+	                      c.ParentId,
+	                      c.ChannelType,
+	                      c.ChannelName,
+	                      c.Rank,
+	                      (SELECT COUNT(*) FROM " . self::TableName_Channel . " WHERE ParentId=c.ChannelId AND State<100 AND Invisible=0) AS ChildCount
+                        FROM
+                          " . self::TableName_Channel . " c,
+		                  (
+                            SELECT ChannelId FROM " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND
+                              (ManageUserId=:ManageUserId
+							  or  ManageUserGroupId IN (SELECT ManageUserGroupId FROM " . self::TableName_ManageUser . " WHERE ManageUserId=:ManageUserId2)
+							  )
+                            UNION
+                            SELECT ChannelId FROM " . self::TableName_Channel . " WHERE (SiteId IN (SELECT SiteId from " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND SiteId=:SiteId AND ChannelId=0 AND ManageUserId=:ManageUserId4 AND ManageUserGroupId = 0)
+							  or SiteId IN (SELECT SiteId from " . self::TableName_ManageUserAuthority . " WHERE ChannelExplore=1 AND SiteId=:SiteId2 AND ChannelId=0 AND ManageUserId=0 AND ManageUserGroupId IN (SELECT ManageUserGroupId FROM " . self::TableName_ManageUser . " WHERE ManageUserId=:ManageUserId5))
+							  )
+		                  ) as T
+                        WHERE
+                          c.State<100 AND c.SiteId=:SiteId3 AND c.Invisible=0
+	                      AND c.channelId = T.channelId
+                        ORDER BY  c.Sort DESC,c.ChannelId;";
+                    $debug=new DebugLogManageData();
+                    $debug->Create("site:".$siteId.";id:".$manageUserId);
+                    $debug->Create("new:".$sql);
+                }
+                $dataProperty->AddField("ManageUserId", $manageUserId);
+                $dataProperty->AddField("ManageUserId2", $manageUserId);
+                //$dataProperty->AddField("ManageUserId3", $manageUserId);
+                $dataProperty->AddField("ManageUserId4", $manageUserId);
+                $dataProperty->AddField("ManageUserId5", $manageUserId);
+                $dataProperty->AddField("SiteId2", $siteId);
+                $dataProperty->AddField("SiteId3", $siteId);
             }
+            $debug=new DebugLogManageData();
+            $timeStart = Control::GetMicroTime();
             $dataProperty->AddField("SiteId", $siteId);
             $result = $this->dbOperator->GetArrayList($sql, $dataProperty);
+
+            $timeEnd = Control::GetMicroTime();
+            $debug->Create("done_sql:".($timeEnd-$timeStart));
         }
 
 

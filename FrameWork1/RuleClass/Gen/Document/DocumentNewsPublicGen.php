@@ -18,6 +18,9 @@ class DocumentNewsPublicGen extends BasePublicGen implements IBasePublicGen {
             case "async_get_list":
                 $result = self::AsyncGetList();
                 break;
+            case "async_get_list_by_rec_lever_of_site":
+                $result = self::AsyncGetListByRecLevelOfSite();
+                break;
             case "async_get_list_for_push":
                 $result = self::AsyncGetListForPush();
                 break;
@@ -153,6 +156,73 @@ class DocumentNewsPublicGen extends BasePublicGen implements IBasePublicGen {
 
 
         return Control::GetRequest("jsonpcallback","") . '('.$result.')';
+    }
+
+
+    private function AsyncGetListByRecLevelOfSite(){
+        $result = "";
+
+        $siteId = Control::GetRequest("site_id", 0);
+        $pageSize = Control::GetRequest("ps", 20);
+        $pageIndex = Control::GetRequest("p", 1);
+        $recLevel = Control::GetRequest("rec_level",10);
+
+        if ($pageIndex === 0) {
+            $pageIndex = 1;
+        }
+
+        //老数据暂时关闭
+        if($pageIndex>100){
+            return Control::GetRequest("jsonpcallback","") . '('.$result.')';
+        }
+        //老数据暂时关闭 end
+
+
+
+        if ($pageIndex > 0 && $siteId >= 0) {
+            $pageBegin = ($pageIndex - 1) * $pageSize;
+            $topCount=$pageBegin.",".$pageSize;
+            $documentNewsPublicData = new DocumentNewsPublicData();
+            $arrList = $documentNewsPublicData->GetListOfRecLevelBelongSite(
+                $siteId,
+                $recLevel,
+                $topCount
+            );
+            if (count($arrList) > 0) {
+
+
+                //格式化arrList
+                $resultArrList = null;
+                foreach ($arrList as $columnValue) {
+
+                    $directUrl = $columnValue['DirectUrl'];
+                    $publishDate = Format::DateStringToSimple($columnValue['PublishDate']);
+
+                    if(strlen($directUrl)>0){
+                        //$columnValue['DocumentNewsUrl'] = $directUrl; //直接跳转url
+
+                        $columnValue['DocumentNewsUrl'] =   //通过源地址js跳转url
+                            '/h/'.$columnValue['ChannelId'].
+                            '/'.$publishDate.
+                            '/'.$columnValue['DocumentNewsId'].'.html';
+                    }else{
+                        $columnValue['DocumentNewsUrl'] =
+                            '/h/'.$columnValue['ChannelId'].
+                            '/'.$publishDate.
+                            '/'.$columnValue['DocumentNewsId'].'.html';
+                    }
+
+                    $resultArrList[] = $columnValue;
+                }
+
+                $arrResult["result_list"] = $resultArrList;
+                $result = Format::FixJsonEncode($arrResult);
+
+            }
+        }
+
+
+        return Control::GetRequest("jsonpcallback","") . ''.$result.'';
     }
 
 

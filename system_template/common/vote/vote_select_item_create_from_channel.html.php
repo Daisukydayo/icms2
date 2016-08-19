@@ -8,7 +8,7 @@
     <script type="text/javascript" language="JavaScript">
         $().ready(function () {
             $("#btn_check").click(function(){
-                $("#btn_check").hide();
+                //$("#btn_check").hide();
                 var channelId=parseInt($("#channel_id").val());
                 var itemCount=parseInt($("#item_count").val());
                 var state=parseInt($("#state").val());

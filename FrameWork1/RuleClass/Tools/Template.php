@@ -454,188 +454,31 @@ class Template
                         $itemSplitterCount = 0;
                     }
 
-                    if ($itemRowCount <= 0) { //主段显示行数，如果未设置，则默认
-                        $itemRowCount = count($arrList) - $footerRowCount;
+                    //处理主段
+                    if ($itemRowCount <= 0) { //主段显示行数，如果未设置，则默认（主段=行数-头段-尾段）
+                        $itemRowCount = count($arrList) - $footerRowCount - $headerRowCount;
+                    }elseif($itemRowCount > count($arrList) - $headerRowCount){ //避免主段行数溢出
+                        $itemRowCount = count($arrList) - $headerRowCount;
                     }
 
-                    for ($i = 0 + $headerRowCount; $i < $itemRowCount; $i++) {
+                    if($itemRowCount>0){
+                        for ($i = 0 + $headerRowCount ; $i < $itemRowCount + $headerRowCount; $i++) {
 
-                        //如果有交替行
-                        if (strlen($alterItemTempContent) > 0) {
-                            if ($i % 2 === 1) {
-                                $list = $alterItemTempContent;
+                            //如果有交替行
+                            if (strlen($alterItemTempContent) > 0) {
+                                if (($i+ $headerRowCount) % 2 === 1) {
+                                    $list = $alterItemTempContent;
+                                } else {
+                                    $list = $itemTempContent;
+                                }
                             } else {
                                 $list = $itemTempContent;
                             }
-                        } else {
-                            $list = $itemTempContent;
-                        }
 
 
 
-                        $columns = $arrList[$i];
-                        $itemType = "item";
-                        $list = self::ReplaceListItem(
-                            $i,
-                            $type,
-                            $itemRowTitleCount,
-                            $itemRowIntroCount,
-                            $headerRowTitleCount,
-                            $footerRowTitleCount,
-                            $childRowTitleCount,
-                            $columns,
-                            $list,
-                            $itemType
-                        );
-
-                        //处理子表数据
-                        $sbChild = "";
-                        $childCount = 0; //匹配的子节点数量
-
-                        if(count($arrChildList)>0){
-
-                            //根级id赋值
-                            $arrList[$i]["FirstId"] = $arrList[$i][$tableIdName];
-
-
-                            $childNumber = 0;
-
-                            for($j = 0; $j<count($arrChildList); $j++){
-
-
-                                $arrChildList[$j]["FirstId"] = $arrList[$i][$tableIdName];
-
-                                $listOfChild = $childTempContent;
-                                $columnsOfChild = $arrChildList[$j];
-                                if($arrList[$i][$tableIdName] == $arrChildList[$j][$parentIdName]){
-
-                                    $childCount++;
-
-                                    $listOfChild = self::ReplaceListItem(
-                                        $j,
-                                        $type,
-                                        $itemRowTitleCount,
-                                        $itemRowIntroCount,
-                                        $headerRowTitleCount,
-                                        $footerRowTitleCount,
-                                        $childRowTitleCount,
-                                        $columnsOfChild,
-                                        $listOfChild,
-                                        $itemType
-                                    );
-
-                                    //处理可转化的缓存子段数据
-                                    $sbChildInfoString = "";
-                                    if(strlen($childArrayFieldName)>0){
-                                        //这是一个已经编码的数组字符串，存储了一个数组 {id,title}
-                                        $infoString = $arrChildList[$j][$childArrayFieldName];
-                                        //把字符串反解成数组
-                                        $arrInfoString = Format::UnFormatInfoString($infoString);
-                                        for( $info_i = 0; $info_i < count($arrInfoString); $info_i++){
-
-                                            $listOfChildInfoString = $childInfoStringTempContent;
-                                            $columnsOfChildInfoString = $arrInfoString[$info_i];
-                                            $listOfChildInfoString = self::ReplaceListItem(
-                                                $info_i,
-                                                $type,
-                                                $itemRowTitleCount,
-                                                $itemRowIntroCount,
-                                                $headerRowTitleCount,
-                                                $footerRowTitleCount,
-                                                $thirdRowTitleCount,
-                                                $columnsOfChildInfoString,
-                                                $listOfChildInfoString,
-                                                $itemType
-                                            );
-
-                                            $sbChildInfoString = $sbChildInfoString . $listOfChildInfoString;
-                                        }
-
-                                    }
-
-                                    //处理三级数据
-                                    $sbThird = "";
-                                    if(count($arrThirdList)>0){
-
-                                        for($k = 0; $k<count($arrThirdList); $k++){
-                                            $arrThirdList[$k]["SecondId"] = $arrChildList[$j][$tableIdName];
-                                            $arrThirdList[$k]["FirstId"] = $arrList[$i][$tableIdName];
-
-                                            $listOfThird = $thirdTempContent;
-                                            $columnsOfThird = $arrThirdList[$k];
-
-                                            if($arrChildList[$j][$thirdTableIdName] ==
-                                                $arrThirdList[$k][$thirdParentIdName]
-                                            ){
-
-                                                $listOfThird = self::ReplaceListItem(
-                                                    $k,
-                                                    $type,
-                                                    $itemRowTitleCount,
-                                                    $itemRowIntroCount,
-                                                    $headerRowTitleCount,
-                                                    $footerRowTitleCount,
-                                                    $thirdRowTitleCount,
-                                                    $columnsOfThird,
-                                                    $listOfThird,
-                                                    $itemType
-                                                );
-
-                                                $sbThird = $sbThird . $listOfThird;
-                                            }
-
-
-                                        }
-
-
-
-                                    }
-
-                                    $childNumber++;
-                                    $listOfChild = str_ireplace("{child_info_string}", $sbChildInfoString, $listOfChild);
-                                    $listOfChild = str_ireplace("{third}", $sbThird, $listOfChild);
-                                    $listOfChild = str_ireplace("{c_child_no}", $childNumber, $listOfChild);
-
-
-                                    $sbChild = $sbChild . $listOfChild;
-                                }
-
-                            }
-
-
-                        }
-
-
-                        $list = str_ireplace("{child}", $sbChild, $list);
-                        $list = str_ireplace("{child_count}", $childCount, $list);
-
-                        $list = str_ireplace("{c_all_count}", count($arrList), $list);
-                        $sb = $sb . $list;
-
-
-                        //每隔一定主段条数附加分割线，最底部分割线不附加
-                        //一定要放最后加载
-                        if ($itemSplitterCount > 0) {
-
-                            if ($i < count($arrList) - $footerRowCount - 1 && ($i - $headerRowCount + 1) % ($itemSplitterCount) == 0) {
-                                $sb = $sb . $itemSplitterTempContent;
-                            }
-                        }
-
-
-
-                    }
-
-
-                    //附加分割线
-                    $sb = $sb . $footerSplitterTempContent;
-
-                    //处理尾段
-                    if ($footerRowCount > 0) {
-                        for ($i = count($arrList) - $footerRowCount; $i < count($arrList); $i++) {
                             $columns = $arrList[$i];
-                            $list = $footerTempContent;
-                            $itemType = "footer";
+                            $itemType = "item";
                             $list = self::ReplaceListItem(
                                 $i,
                                 $type,
@@ -648,8 +491,173 @@ class Template
                                 $list,
                                 $itemType
                             );
+
+                            //处理子表数据
+                            $sbChild = "";
+                            $childCount = 0; //匹配的子节点数量
+
+                            if(count($arrChildList)>0){
+
+                                //根级id赋值
+                                $arrList[$i]["FirstId"] = $arrList[$i][$tableIdName];
+
+
+                                $childNumber = 0;
+
+                                for($j = 0; $j<count($arrChildList); $j++){
+
+
+                                    $arrChildList[$j]["FirstId"] = $arrList[$i][$tableIdName];
+
+                                    $listOfChild = $childTempContent;
+                                    $columnsOfChild = $arrChildList[$j];
+                                    if($arrList[$i][$tableIdName] == $arrChildList[$j][$parentIdName]){
+
+                                        $childCount++;
+
+                                        $listOfChild = self::ReplaceListItem(
+                                            $j,
+                                            $type,
+                                            $itemRowTitleCount,
+                                            $itemRowIntroCount,
+                                            $headerRowTitleCount,
+                                            $footerRowTitleCount,
+                                            $childRowTitleCount,
+                                            $columnsOfChild,
+                                            $listOfChild,
+                                            $itemType
+                                        );
+
+                                        //处理可转化的缓存子段数据
+                                        $sbChildInfoString = "";
+                                        if(strlen($childArrayFieldName)>0){
+                                            //这是一个已经编码的数组字符串，存储了一个数组 {id,title}
+                                            $infoString = $arrChildList[$j][$childArrayFieldName];
+                                            //把字符串反解成数组
+                                            $arrInfoString = Format::UnFormatInfoString($infoString);
+                                            for( $info_i = 0; $info_i < count($arrInfoString); $info_i++){
+
+                                                $listOfChildInfoString = $childInfoStringTempContent;
+                                                $columnsOfChildInfoString = $arrInfoString[$info_i];
+                                                $listOfChildInfoString = self::ReplaceListItem(
+                                                    $info_i,
+                                                    $type,
+                                                    $itemRowTitleCount,
+                                                    $itemRowIntroCount,
+                                                    $headerRowTitleCount,
+                                                    $footerRowTitleCount,
+                                                    $thirdRowTitleCount,
+                                                    $columnsOfChildInfoString,
+                                                    $listOfChildInfoString,
+                                                    $itemType
+                                                );
+
+                                                $sbChildInfoString = $sbChildInfoString . $listOfChildInfoString;
+                                            }
+
+                                        }
+
+                                        //处理三级数据
+                                        $sbThird = "";
+                                        if(count($arrThirdList)>0){
+
+                                            for($k = 0; $k<count($arrThirdList); $k++){
+                                                $arrThirdList[$k]["SecondId"] = $arrChildList[$j][$tableIdName];
+                                                $arrThirdList[$k]["FirstId"] = $arrList[$i][$tableIdName];
+
+                                                $listOfThird = $thirdTempContent;
+                                                $columnsOfThird = $arrThirdList[$k];
+
+                                                if($arrChildList[$j][$thirdTableIdName] ==
+                                                    $arrThirdList[$k][$thirdParentIdName]
+                                                ){
+
+                                                    $listOfThird = self::ReplaceListItem(
+                                                        $k,
+                                                        $type,
+                                                        $itemRowTitleCount,
+                                                        $itemRowIntroCount,
+                                                        $headerRowTitleCount,
+                                                        $footerRowTitleCount,
+                                                        $thirdRowTitleCount,
+                                                        $columnsOfThird,
+                                                        $listOfThird,
+                                                        $itemType
+                                                    );
+
+                                                    $sbThird = $sbThird . $listOfThird;
+                                                }
+
+
+                                            }
+
+
+
+                                        }
+
+                                        $childNumber++;
+                                        $listOfChild = str_ireplace("{child_info_string}", $sbChildInfoString, $listOfChild);
+                                        $listOfChild = str_ireplace("{third}", $sbThird, $listOfChild);
+                                        $listOfChild = str_ireplace("{c_child_no}", $childNumber, $listOfChild);
+
+
+                                        $sbChild = $sbChild . $listOfChild;
+                                    }
+
+                                }
+
+
+                            }
+
+
+                            $list = str_ireplace("{child}", $sbChild, $list);
+                            $list = str_ireplace("{child_count}", $childCount, $list);
+
                             $list = str_ireplace("{c_all_count}", count($arrList), $list);
                             $sb = $sb . $list;
+
+
+                            //每隔一定主段条数附加分割线，最底部分割线不附加
+                            //一定要放最后加载
+                            if ($itemSplitterCount > 0) {
+
+                                if ($i < count($arrList) - $footerRowCount - 1 && ($i - $headerRowCount + 1) % ($itemSplitterCount) == 0) {
+                                    $sb = $sb . $itemSplitterTempContent;
+                                }
+                            }
+
+
+
+                        }
+                    }
+
+
+                    //附加分割线
+                    $sb = $sb . $footerSplitterTempContent;
+
+                    //处理尾段
+                    if ($footerRowCount > 0) {
+                        $footerRowCount = count($arrList)-$headerRowCount-$itemRowCount; //检查头段，主段是否已把条数占完
+                        if($footerRowCount>0){
+                            for ($i = 0 + $headerRowCount + $itemRowCount; $i < count($arrList); $i++) {
+                                $columns = $arrList[$i];
+                                $list = $footerTempContent;
+                                $itemType = "footer";
+                                $list = self::ReplaceListItem(
+                                    $i,
+                                    $type,
+                                    $itemRowTitleCount,
+                                    $itemRowIntroCount,
+                                    $headerRowTitleCount,
+                                    $footerRowTitleCount,
+                                    $childRowTitleCount,
+                                    $columns,
+                                    $list,
+                                    $itemType
+                                );
+                                $list = str_ireplace("{c_all_count}", count($arrList), $list);
+                                $sb = $sb . $list;
+                            }
                         }
                     }
 

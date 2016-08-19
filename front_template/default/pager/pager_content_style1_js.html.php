@@ -1,1 +1,1 @@
-<div class="{BoxStyle}"><a href="{Url}&{PageIndexName}={Index}">{IndexContent}</a></div>
+<div class="{BoxStyle}" idvalue="{IndexContent}" onclick="{JsFunctionName}({IndexContent})"><a >{IndexContent}</a></div> <!--href="{Url}&{PageIndexName}={Index}"-->

@@ -421,7 +421,7 @@ class BaseManageGen extends BaseGen
         $arrCustomTags = Template::GetAllCustomTag($channelTemplateContent);
         if (count($arrCustomTags) > 0) {
             $arrTempContents = $arrCustomTags[0];
-
+            $strPagerButtonTemplate="";
             foreach ($arrTempContents as $tagContent) {
                 //标签id channel_1 document_news_1
                 $tagId = Template::GetParamValue($tagContent, "id");
@@ -441,7 +441,8 @@ class BaseManageGen extends BaseGen
                 }
                 //显示状态
                 $state = Template::GetParamValue($tagContent, "state");
-
+                $withPager = Template::GetParamValue($tagContent, "with_pager"); //是否是列表页列表(是否翻页)
+                $allCount=0;
                 switch ($tagType) {
                     case Template::TAG_TYPE_CHANNEL_LIST :
 
@@ -470,6 +471,10 @@ class BaseManageGen extends BaseGen
                                 $tagOrder,
                                 $state
                             );
+                        }
+                        if($withPager=="1"){
+                            $documentNewsManageData=new DocumentNewsManageData();
+                            $allCount=$documentNewsManageData->GetCountInChannel($channelId);
                         }
                         break;
                     case Template::TAG_TYPE_RELATED_DOCUMENT_NEWS_LIST : //相关新闻
@@ -551,6 +556,24 @@ class BaseManageGen extends BaseGen
                         }
                         break;
                 }
+
+                //分页按钮
+                $pagerButton="";
+                if($withPager=="1"&&$allCount>0){
+                    if($strPagerButtonTemplate==""){
+                        $channelTemplateManageData=new ChannelTemplateManageData();
+                        $pagerBtnTemplateId = Template::GetParamValue($tagContent, "pager_button_template_id"); //是否是列表页列表(是否翻页)
+                        if($pagerBtnTemplateId>0){
+                            $strPagerButtonTemplate = $channelTemplateManageData->GetChannelTemplateContent($pagerBtnTemplateId,true);
+                        }else{
+                            $strPagerButtonTemplate = $channelTemplateManageData->GetChannelTemplateContent(0,true,$siteId,"pager");
+                        }
+                    }
+                    $pagerButton = Pager::ShowPageButton($strPagerButtonTemplate, "", $allCount, $tagTopCount, 1);
+
+
+                }
+                $channelTemplateContent = str_ireplace("{dynamic_pager_button}", $pagerButton, $channelTemplateContent);
             }
         }
         self::ReplaceEnd($channelTemplateContent);
@@ -1590,6 +1613,7 @@ class BaseManageGen extends BaseGen
                                         $channelTemplateContent = self::ReplaceTemplate($channelId, $channelTemplateContent);
                                         $timeEnd = Control::GetMicroTime();
 
+
                                         //传输日志 替换模板
                                         $publishLogManageData->Create(
                                             PublishLogManageData::TRANSFER_TYPE_NO_DEFINE,
@@ -1612,7 +1636,7 @@ class BaseManageGen extends BaseGen
                                             //更新点击数后跳转
                                                 $channelTemplateContent='<script type="text/javascript" src="/system_js/jquery-1.9.1.min.js"></script>';
                                                 $channelTemplateContent.= '<script>$.post("/default.php?mod=document_news&a=async_add_and_get_hit&id='.$documentNewsId.'", {resultbox: $(this).html()}, function(result) {});</script>';
-                                            if($documentNewsId!=436662){
+                                            if($documentNewsId!=436662){//旧方式留档
                                                 $channelTemplateContent.= '<script>window.location.href="'.$arrOne["DirectUrl"].'";</script>';
                                             }
 
@@ -1765,6 +1789,7 @@ class BaseManageGen extends BaseGen
                                             }else{  //没有分页时
 
                                                 Template::ReplaceOne($channelTemplateContent, $arrOne);
+
 
                                                 $channelTemplateContent = str_ireplace("{pager_button}", "", $channelTemplateContent);
                                                 $channelTemplateContent = str_ireplace("{ChannelName}", $channelName, $channelTemplateContent);

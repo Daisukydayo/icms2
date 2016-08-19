@@ -209,9 +209,11 @@ class ChannelTemplateManageData extends BaseManageData
      * 取得频道模板的内容
      * @param int $channelTemplateId 频道模板id
      * @param bool $withCache 是否从缓冲中取
+     * @param int $siteId
+     * @param string $channelTemplateTag 模板标签
      * @return string 频道模板的内容
      */
-    public function GetChannelTemplateContent($channelTemplateId, $withCache)
+    public function GetChannelTemplateContent($channelTemplateId, $withCache, $siteId=0, $channelTemplateTag="")
     {
         $result = "";
         if ($channelTemplateId > 0) {
@@ -220,6 +222,14 @@ class ChannelTemplateManageData extends BaseManageData
             $sql = "SELECT ChannelTemplateContent FROM " . self::TableName_ChannelTemplate . " WHERE ChannelTemplateId = :ChannelTemplateId;";
             $dataProperty = new DataProperty();
             $dataProperty->AddField("ChannelTemplateId", $channelTemplateId);
+            $result = $this->GetInfoOfStringValue($sql, $dataProperty, $withCache, $cacheDir, $cacheFile);
+        }elseif($siteId>0&&$channelTemplateTag!=""){  //由模板标签取
+            $cacheDir = CACHE_PATH . DIRECTORY_SEPARATOR . 'channel_template_data';
+            $cacheFile = 'channel_template_get_channel_template_content.cache_sid_' . $siteId . '_tag_' . $channelTemplateTag. '';
+            $sql = "SELECT ChannelTemplateContent FROM " . self::TableName_ChannelTemplate . " WHERE SiteId = :SiteId AND ChannelTemplateTag=:ChannelTemplateTag;";
+            $dataProperty = new DataProperty();
+            $dataProperty->AddField("SiteId", $siteId);
+            $dataProperty->AddField("ChannelTemplateTag", $channelTemplateTag);
             $result = $this->GetInfoOfStringValue($sql, $dataProperty, $withCache, $cacheDir, $cacheFile);
         }
         return $result;

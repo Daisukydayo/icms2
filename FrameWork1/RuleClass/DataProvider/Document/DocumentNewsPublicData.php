@@ -1043,7 +1043,7 @@ class DocumentNewsPublicData extends BasePublicData {
         //$result = $this->dbOperator->GetArrayList($sql, $dataProperty);
 
 
-        $sql = "SELECT count(*) FROM " . self::TableName_DocumentNews . " WHERE State=:State " . $searchSql;
+        $sql = "SELECT count(*) FROM " . self::TableName_DocumentNews . " dn WHERE dn.State=:State " . $searchSql;
         $allCount = $this->dbOperator->GetInt($sql, $dataProperty);
 
         return $result;

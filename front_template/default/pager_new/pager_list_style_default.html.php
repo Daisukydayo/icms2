@@ -1,1 +1,1 @@
-<div class="{BoxStyle}"><a href="{pageHref}">{pageNumber}</a></div>
+<div class="{BoxStyle}" idvalue="{pageNumber}"><a href="{pageHref}">{pageNumber}</a></div>

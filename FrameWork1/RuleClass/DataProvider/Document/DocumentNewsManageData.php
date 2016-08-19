@@ -3,7 +3,7 @@
  * 后台管理 资讯 数据类
  * @category iCMS
  * @package iCMS_FrameWork1_RuleClass_DataProvider_Document
- * @author zhangchi
+ * @author zhangchi-
  */
 class DocumentNewsManageData extends BaseManageData
 {
@@ -486,10 +486,15 @@ class DocumentNewsManageData extends BaseManageData
         $beginDate="",
         $endDate="",
         $manageUserId = 0,
-        $state=30
+        $state=-1
 
     )
     {
+
+
+        if(str_replace(" ","",$searchKey)==""){
+            return array();
+        }
         $dataProperty = new DataProperty();
 
         $conditionSiteId="";
@@ -501,7 +506,7 @@ class DocumentNewsManageData extends BaseManageData
         $searchSql = "";
         if($arrayOfSearchKey!=null){ //标题 多个关键字
             foreach($arrayOfSearchKey as $oneSearchKey){
-                if($oneSearchKey!=""){
+                if($oneSearchKey!=""&&$oneSearchKey!=null){
                     $searchSql .= " AND DocumentNewsTitle like '%$oneSearchKey%' ";
                 }
             }
@@ -538,7 +543,7 @@ class DocumentNewsManageData extends BaseManageData
         }
 
         $conditionState="";
-        if($state>0){ //状态  默认已发
+        if($state>=0){ //状态  默认已发
             $conditionState=" AND (State = $state) ";
         }
 
@@ -552,7 +557,7 @@ class DocumentNewsManageData extends BaseManageData
 
         $sql = "
             SELECT
-            DocumentNewsId,DocumentNewsTitle,DocumentNewsIntro,SiteId,ChannelId,PublishDate,
+            DocumentNewsId,DocumentNewsTitle,DocumentNewsIntro,SiteId,State,ChannelId,PublishDate,
             CreateDate,ManageUserId,ManageUserName,UserName
             FROM
             " . self::TableName_DocumentNews . "
@@ -569,9 +574,28 @@ class DocumentNewsManageData extends BaseManageData
 
         $result = $this->dbOperator->GetArrayList($sql, $dataProperty);
 
+        echo '<div style="display:none">'.$sql.'</div>';
+
         return $result;
     }
 
+
+
+    /**
+     * 取得节点内已发的条数（pager_button用）
+     * @param int $channelId id
+     * @return int 条数
+     */
+    public function GetCountInChannel($channelId){
+        $result = -1;
+        if($channelId > 0){
+            $sql = "SELECT COUNT(*) FROM ".self::TableName_DocumentNews." WHERE ChannelId=:ChannelId AND State=30;";
+            $dataProperty = new DataProperty();
+            $dataProperty->AddField("ChannelId",$channelId);
+            $result = $this->dbOperator->GetInt($sql,$dataProperty);
+        }
+        return $result;
+    }
 
 
     /**
@@ -827,6 +851,16 @@ class DocumentNewsManageData extends BaseManageData
     public function GetOne($documentNewsId)
     {
         $sql = "SELECT *,(Hit+VirtualHit) AS AllHit FROM " . self::TableName_DocumentNews . " WHERE " . self::TableId_DocumentNews. "=:" . self::TableId_DocumentNews . ";";
+
+        if($documentNewsId==449908){
+
+            $sql = "SELECT dn.*,(dn.Hit+dn.VirtualHit) AS AllHit,
+                       uf.UploadFilePath AS DocumentNewsTitlePic1UploadFilePath
+          FROM " . self::TableName_DocumentNews . " dn
+          LEFT OUTER JOIN " . self::TableName_UploadFile . " uf ON uf.UploadFileId=dn.TitlePic1UploadFileId
+          WHERE dn." . self::TableId_DocumentNews. "=:" . self::TableId_DocumentNews . ";";
+        }
+
         $dataProperty = new DataProperty();
         $dataProperty->AddField(self::TableId_DocumentNews, $documentNewsId);
         $result = $this->dbOperator->GetArray($sql, $dataProperty);
@@ -2333,7 +2367,7 @@ class DocumentNewsManageData extends BaseManageData
     public function GetListForVoteSelectItem($channelId,$itemCount=0,$state=30){
         $result=null;
         if($channelId>0){
-            $sql = "SELECT DocumentNewsTitle,DocumentNewsId,SiteId,PublishDate,DirectUrl FROM ".self::TableName_DocumentNews." WHERE ChannelId=:ChannelId AND State=:State ORDER BY Sort LIMIT $itemCount;";
+            $sql = "SELECT DocumentNewsTitle,DocumentNewsId,SiteId,PublishDate,DirectUrl FROM ".self::TableName_DocumentNews." WHERE ChannelId=:ChannelId AND State=:State ORDER BY Sort DESC LIMIT $itemCount;";
             $dataProperty = new DataProperty();
             $dataProperty->AddField("ChannelId", $channelId);
             $dataProperty->AddField("State", $state);
