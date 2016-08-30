@@ -86,6 +86,11 @@ class DocumentNewsPublicGen extends BasePublicGen implements IBasePublicGen {
                 true
             );
             if (count($arrList) > 0) {
+                foreach($arrList as &$one){
+                    if(isset($one["CiteHit"])&&$one["CiteHit"]>0){
+                        $one["AllHit"]=$one["CiteHit"];
+                    }
+                }
 
                 $templateFileUrl = "pager/pager_style".$pagerTempType."_js.html";
                 $templateName = "default";
@@ -390,6 +395,9 @@ class DocumentNewsPublicGen extends BasePublicGen implements IBasePublicGen {
         $siteId = Control::GetRequest("site_id", 0);
         $channelId = Control::GetRequest("channel_id", 0);
         $topCount = Control::GetRequest("top", 0);
+        if(intval($topCount)>100){
+            $topCount="100";
+        }
         $showIndex = Control::GetRequest("show_index", 0);
         $childType=Control::GetRequest("child_type", "self");
         $state=30;

@@ -105,10 +105,15 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
 
             } else {
                 $documentNewsManageData = new DocumentNewsManageData();
+
+                $siteManageData=new SiteManageData();
+                $siteUrl=$siteManageData->GetSiteUrl($siteId,true);
+
                 $templateContent = str_ireplace("{ChannelId}", $channelId, $templateContent);
                 $templateContent = str_ireplace("{ChannelName}", $channelName, $templateContent);
                 $templateContent = str_ireplace("{DocumentNewsId}", "", $templateContent);
                 $templateContent = str_ireplace("{SiteId}", $siteId, $templateContent);
+                $templateContent = str_ireplace("{SiteUrl}", $siteUrl, $templateContent);
                 $templateContent = str_ireplace("{ManageUserId}", $manageUserId, $templateContent);
                 $templateContent = str_ireplace("{ManageUserName}", $manageUserName, $templateContent);
                 $templateContent = str_ireplace("{PageIndex}", $pageIndex, $templateContent);
@@ -478,9 +483,13 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
 
             ////////////////////////////////////////////////////
 
+            $siteManageData=new SiteManageData();
+            $siteUrl=$siteManageData->GetSiteUrl($siteId,true);
+
             $templateContent = str_ireplace("{ChannelId}", $channelId, $templateContent);
             $templateContent = str_ireplace("{DocumentNewsId}", $documentNewsId, $templateContent);
             $templateContent = str_ireplace("{SiteId}", $siteId, $templateContent);
+            $templateContent = str_ireplace("{SiteUrl}", $siteUrl, $templateContent);
             $templateContent = str_ireplace("{PageIndex}", $pageIndex, $templateContent);
 
             /////////////////////////////////////////////////

@@ -83,6 +83,7 @@ class DocumentNewsPublicData extends BasePublicData {
             dn.Hit,
             dn.PublishDate,
             (dn.Hit+dn.VirtualHit) AS AllHit,
+            (dn1.Hit+dn1.VirtualHit) AS CiteHit,
 
             uf1.UploadFilePath AS TitlePic1UploadFilePath,
             uf1.UploadFileMobilePath AS TitlePic1UploadFileMobilePath,
@@ -126,6 +127,7 @@ class DocumentNewsPublicData extends BasePublicData {
             ';
 
             $sql = "SELECT $selectColumn FROM " . self::TableName_DocumentNews . " dn
+                    LEFT OUTER JOIN " .self::TableName_DocumentNews." dn1 on dn.CiteDocumentNewsId=dn1.DocumentNewsId
                     LEFT OUTER JOIN " .self::TableName_Channel." c on dn.ChannelId = c.ChannelId
                     LEFT OUTER JOIN " .self::TableName_UploadFile." uf1 on dn.TitlePic1UploadFileId=uf1.UploadFileId
                     LEFT OUTER JOIN " .self::TableName_UploadFile." uf2 on dn.TitlePic2UploadFileId=uf2.UploadFileId
@@ -190,7 +192,7 @@ class DocumentNewsPublicData extends BasePublicData {
 
             $searchShowIndex="";
             if($showIndex>0){
-                $searchShowIndex=' AND ShowIndex>=1 ';
+                $searchShowIndex=' AND dn.ShowIndex>=1 ';
             }
 
             if($channelId>0){
@@ -237,6 +239,7 @@ class DocumentNewsPublicData extends BasePublicData {
             dn.Hit,
             dn.PublishDate,
             (dn.Hit+dn.VirtualHit) AS AllHit,
+            (dn1.Hit+dn1.VirtualHit) AS CiteHit,
 
             uf1.UploadFilePath AS TitlePic1UploadFilePath,
             uf1.UploadFileMobilePath AS TitlePic1UploadFileMobilePath,
@@ -281,6 +284,7 @@ class DocumentNewsPublicData extends BasePublicData {
             ';
 
             $sql = "SELECT $selectColumn FROM " . self::TableName_DocumentNews . "  dn
+                    LEFT OUTER JOIN " .self::TableName_DocumentNews." dn1 on dn.CiteDocumentNewsId=dn1.DocumentNewsId
                     LEFT OUTER JOIN " .self::TableName_Channel." c on dn.ChannelId = c.ChannelId
                     LEFT OUTER JOIN " .self::TableName_UploadFile." uf1 on dn.TitlePic1UploadFileId=uf1.UploadFileId
                     LEFT OUTER JOIN " .self::TableName_UploadFile." uf2 on dn.TitlePic2UploadFileId=uf2.UploadFileId
@@ -919,13 +923,13 @@ class DocumentNewsPublicData extends BasePublicData {
             $withCache = FALSE;
 
             $searchSql .= " AND (
-                    DocumentNewsTitle LIKE :SearchKey1
-                OR ManageUserName LIKE :SearchKey2
-                OR UserName LIKE :SearchKey3
-                OR Author LIKE :SearchKey4
-                OR DocumentNewsSubTitle LIKE :SearchKey5
-                OR DocumentNewsCiteTitle LIKE :SearchKey6
-                OR DocumentNewsShortTitle LIKE :SearchKey7
+                   dn.DocumentNewsTitle LIKE :SearchKey1
+                OR dn.ManageUserName LIKE :SearchKey2
+                OR dn.UserName LIKE :SearchKey3
+                OR dn.Author LIKE :SearchKey4
+                OR dn.DocumentNewsSubTitle LIKE :SearchKey5
+                OR dn.DocumentNewsCiteTitle LIKE :SearchKey6
+                OR dn.DocumentNewsShortTitle LIKE :SearchKey7
 
             )";
             $dataProperty->AddField("SearchKey1", "%" . $searchKey . "%");
@@ -978,6 +982,7 @@ class DocumentNewsPublicData extends BasePublicData {
 
             dn.DocumentNewsContent,
             (dn.Hit+dn.VirtualHit) AS AllHit,
+            (dn1.Hit+dn1.VirtualHit) AS CiteHit,
 
             uf1.UploadFilePath AS TitlePic1UploadFilePath,
             uf1.UploadFileMobilePath AS TitlePic1UploadFileMobilePath,
@@ -1025,6 +1030,7 @@ class DocumentNewsPublicData extends BasePublicData {
             $selectColumn
             FROM
             " . self::TableName_DocumentNews . " dn
+                    LEFT OUTER JOIN " .self::TableName_DocumentNews." dn1 on dn.CiteDocumentNewsId=dn1.DocumentNewsId
                     LEFT OUTER JOIN ".self::TableName_Channel." c on dn.ChannelId = c.ChannelId
                     LEFT OUTER JOIN " .self::TableName_UploadFile." uf1 on dn.TitlePic1UploadFileId=uf1.UploadFileId
                     LEFT OUTER JOIN " .self::TableName_UploadFile." uf2 on dn.TitlePic2UploadFileId=uf2.UploadFileId
@@ -1144,6 +1150,7 @@ class DocumentNewsPublicData extends BasePublicData {
 
             dn.DocumentNewsContent,
             (dn.Hit+dn.VirtualHit) AS AllHit,
+            (dn1.Hit+dn1.VirtualHit) AS CiteHit,
 
             uf1.UploadFilePath AS TitlePic1UploadFilePath,
             uf1.UploadFileMobilePath AS TitlePic1UploadFileMobilePath,
@@ -1192,6 +1199,7 @@ class DocumentNewsPublicData extends BasePublicData {
             $selectColumn
             FROM
             " . self::TableName_DocumentNews . " dn
+                    LEFT OUTER JOIN " .self::TableName_DocumentNews." dn1 on dn.CiteDocumentNewsId=dn1.DocumentNewsId
                     LEFT OUTER JOIN " .self::TableName_Site." s on dn.SiteId=s.SiteId
                     LEFT OUTER JOIN " .self::TableName_Channel." c on dn.ChannelId = c.ChannelId
                     LEFT OUTER JOIN " .self::TableName_UploadFile." uf1 on dn.TitlePic1UploadFileId=uf1.UploadFileId

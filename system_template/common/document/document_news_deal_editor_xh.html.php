@@ -25,18 +25,32 @@
 		function changeEditor() {
 			setcookie("editor", "TINY");
 
-			var document_news_id = Request["document_news_id"];
-			var tab_index = Request["tab_index"];
-			var p = Request["p"];
+            var document_news_id = Request["document_news_id"];
+            var channel_id = Request["channel_id"];
+            var tab_index = Request["tab_index"];
+            var p = Request["p"];
+            var method = Request["m"];
 
-			window.location.href = "/default.php"
-					+ "?secu=manage"
-					+ "&mod=document_news"
-					+ "&m=modify"
-					+ "&editor=tiny"
-					+ "&document_news_id=" + document_news_id
-					+ "&tab_index=" + tab_index
-					+ "&p=" + p;
+            if(method=="create"){
+                window.location.href = "/default.php"
+                    + "?secu=manage"
+                    + "&mod=document_news"
+                    + "&m=" + method
+                    + "&editor=xh"
+                    + "&channel_id=" + channel_id
+                    + "&tab_index=" + tab_index
+                    + "&p=" + p;
+            }
+            if(method=="modify"){
+                window.location.href = "/default.php"
+                    + "?secu=manage"
+                    + "&mod=document_news"
+                    + "&m=" + method
+                    + "&editor=xh"
+                    + "&document_news_id=" + document_news_id
+                    + "&tab_index=" + tab_index
+                    + "&p=" + p;
+            }
 		}
 	</script>
 <script type="text/javascript">
@@ -173,7 +187,7 @@ $(function () {
         showButtonPanel: true
     });
 
-    if (Request["document_news_id"] == undefined) {
+    if (Request["document_news_id"] == undefined || Request["document_news_id"] == "") {
         var today = new Date();
         var month = today.getMonth() + 1;
         var s_date = today.getFullYear() + "-" + month + "-" + today.getDate();
@@ -530,6 +544,15 @@ function DocumentNewsTagPulling(){
         }
     });
 }
+function GetLinkedDocumentNewsId(){
+    var url=$("#f_DirectUrl").val();
+    var siteUrl="{SiteUrl}";
+    if(url.substr(0,1)=="/"||url.search(siteUrl)>=0){
+        var id=parseInt(url.replace(siteUrl,'').replace('/h','').replace(/\/\d+\/\d+\//,'').replace("/","").replace(".html",""));
+        $("#f_CiteDocumentNewsId").val(id);
+        $("#f_IsCite").find("option[value='1']").attr("selected",true);
+    }
+}
 </script>
 <style>
     .plupload_scroll {
@@ -726,9 +749,23 @@ function DocumentNewsTagPulling(){
                     for="f_DirectUrl">直接转向网址：</label></td>
             <td class="spe_line" style="text-align: left"><input type="text" class="input_box input_title" id="f_DirectUrl"
                                                                  name="f_DirectUrl" value="{DirectUrl}"
-                                                                 style=" width: 70%;font-size:14px;" maxlength="200"/>
+                                                                 style=" width: 70%;font-size:14px;" maxlength="200" onchange="GetLinkedDocumentNewsId()"/>
                 <div id="length_f_DirectUrl" style="line-height:20px"></div>
             </td>
+        </tr>
+        <tr>
+            <td class="spe_line" style="width:140px;height:35px;text-align: left;"><label
+                    for="f_CiteDocumentNewsId">直接转向文档的ID：</label></td>
+            <td class="spe_line" style="text-align: left">
+                <input type="number" class="input_box input_title" id="f_CiteDocumentNewsId"
+                                                                 name="f_CiteDocumentNewsId" value="{CiteDocumentNewsId}"
+                                                                 style=" width: 30%;font-size:14px;" maxlength="200" />
+                <label for="f_IsCite">是否跳转到其他文档：</label>
+                <select id="f_IsCite" name="f_IsCite">
+                    <option selected="selected" value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+                {s_IsCite}
         </tr>
     </table>
 </div>

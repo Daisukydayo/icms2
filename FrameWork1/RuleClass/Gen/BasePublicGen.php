@@ -816,6 +816,11 @@ class BasePublicGen extends BaseGen
                     break;
             }
             if (!empty($arrDocumentNewsList)) {
+                foreach($arrDocumentNewsList as &$one){
+                    if(isset($one["CiteHit"])&&$one["CiteHit"]>0){
+                        $one["AllHit"]=$one["CiteHit"];
+                    }
+                }
                 Template::ReplaceList($tagContent, $arrDocumentNewsList, $tagId);
                 //把对应ID的CMS标记替换成指定内容
                 $channelTemplateContent = Template::ReplaceCustomTag($channelTemplateContent, $tagId, $tagContent);
