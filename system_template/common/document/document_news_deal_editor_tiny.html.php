@@ -237,15 +237,24 @@
 				//电头
 
 			$(".btn_add_pre_content").each(function(){
-				var today=new Date();
-				var month=today.getMonth();
-				var day=today.getDate();
-				$(this).append((month+1)+"月"+day+"日讯");
+                var value=$(this).attr("idvalue");
+                $(this).html($(this).html().replaceAll("float:right","")); //解决显示按钮也float right的情况
+                if(parseInt(value)>0&&value!=undefined){
+
+                }else{
+                    var today=new Date();
+                    var month=today.getMonth();
+                    var day=today.getDate();
+                    $(this).append((month+1)+"月"+day+"日讯");
+                    var title=$(this).attr("title");
+                    $(this).attr("title",title+(month+1)+"月"+day+"日讯");
+                }
 			});
 			var btnAddPreContent = $(".btn_add_pre_content");
 			btnAddPreContent.click(function () {
 				var editor = tinyMCE.getInstanceById("f_DocumentNewsContent");
-				var addContent = $(this).text();
+				var addContent = $(this).attr("title");
+                addContent="<span style='font-weight:bold'>"+addContent+"</span>";
 				var editorContent = editor.getContent();
 				editorContent = "　　" + addContent + editorContent;
 				editor.setContent(editorContent);
@@ -776,7 +785,7 @@
 														<icms id="document_pre_content" type="list">
 															<item>
 																<![CDATA[
-                                        <span style="cursor: pointer;" class="btn_add_pre_content"
+                                        <span style="cursor: pointer;" class="btn_add_pre_content" idvalue="{f_State}"
                                               title="{f_DocumentPreContent}">{f_DocumentPreContent}</span><br/>
 																]]>
 															</item>
