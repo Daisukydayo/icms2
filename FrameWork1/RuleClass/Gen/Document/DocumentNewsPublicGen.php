@@ -405,6 +405,9 @@ class DocumentNewsPublicGen extends BasePublicGen implements IBasePublicGen {
 
         if ($siteId > 0) {
 
+            $sitePublicData=new SitePublicData();
+            $siteUrl=$sitePublicData->GetSiteUrl($siteId,true);
+
             $channelPublicData=new ChannelPublicData();
             $channelName=$channelPublicData->GetChannelName($channelId,true);
             $documentNewsPublicData = new DocumentNewsPublicData();
@@ -438,8 +441,6 @@ class DocumentNewsPublicGen extends BasePublicGen implements IBasePublicGen {
                     if(strlen($directUrl)>0){
                         $columnValue['DocumentNewsUrl'] = $directUrl;
                     }else{
-                        $sitePublicData=new SitePublicData();
-                        $siteUrl=$sitePublicData->GetSiteUrl($siteId,true);
 
                         //暂时解决www.changsha.cn资讯热点没有域名的问题
                         if($siteUrl==''){
@@ -461,8 +462,19 @@ class DocumentNewsPublicGen extends BasePublicGen implements IBasePublicGen {
                 $channelDescription = "";
                 $channelLink = "";
                 $language = "";
-                $result = XMLGenerator::GenForDocumentNews($channelTitle, $channelDescription, $channelLink, $language, $resultArrList);
-            }
+
+                $rssTo=Control::GetRequest("rss_to","");
+                switch($rssTo){
+                    case "ydzx":
+                        $result = XMLGenerator::GenForDocumentNewsToYiDianZiXun($channelTitle, $channelDescription, $siteUrl, $language, $resultArrList);
+
+                        break;
+                    default:
+                        $result = XMLGenerator::GenForDocumentNews($channelTitle, $channelDescription, $channelLink, $language, $resultArrList);
+
+                    break;
+                }
+                }
         }
         return $result;
     }
