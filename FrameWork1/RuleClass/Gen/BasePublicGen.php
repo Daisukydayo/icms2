@@ -617,6 +617,10 @@ class BasePublicGen extends BaseGen
                             /*** 处理子循环 ***/
                             if((Template::GetAllCustomTag($tagContent, "child"))!=null){
                                 $tagTopCountChild = Template::GetParamValue($tagContent, "top_child");  // top_child="xx"  xx=显示条数
+                                if($tagTopCountChild==""){
+                                    $tagTopCountChild = Template::GetParamValue($tagContent, "child_top_count");  // (同上 补丁)
+
+                                }
                                 switch($tagId){
                                     case "document_news_list":
                                         $documentNewsPublicData=new DocumentNewsPublicData();
