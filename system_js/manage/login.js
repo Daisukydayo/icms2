@@ -76,7 +76,6 @@ function subForm() {
         opResult: $(this).html()
     }, function(xml) {
         var result = parseInt(xml);
-        result=1;
         if (result == -1) {
             divTips.css("display", "block");
             divTips.html("验证码错误！");
