@@ -1549,6 +1549,8 @@ class BasePublicGen extends BaseGen
         if ($voteId > 0) {
             //投票模板加载类型 auto 则加载定义好的几种模板之一
             $tempType = Template::GetParamValue($tagContent, "temp_type");
+            //投票的验证码类型
+            $checkCodeType = Template::GetParamValue($tagContent, "check_code_type");
             //如果配置为加载默认投票模板
             if ($tempType == "auto") {
                 $tempName = Template::GetParamValue($tagContent, "temp_name");
@@ -1665,6 +1667,38 @@ class BasePublicGen extends BaseGen
                 if($isAddJs){
                     $pretempJsContent = Template::Load('vote/vote_front_js_pretemp.html', 'default', 'front_template');
                     $pretempJsContent = str_ireplace('{VoteId}', $voteId, $pretempJsContent);
+
+
+
+                    //验证码类型
+                    switch($checkCodeType){
+                        case "1":
+                            $checkCodeType="gen_verify_code";
+                            break;
+                        case "2":
+                            $checkCodeType="gen_gif_verify_code";
+                            break;
+                        case "3":
+                            $checkCodeType="gen_math_plus_verify_code";
+                            break;
+                        case "4":
+                            $checkCodeType="gen_math_minus_verify_code";
+                            break;
+                        case "5":
+                            $checkCodeType="gen_math_multiple_verify_code";
+                            break;
+                        case "6":
+                            $checkCodeType="gen_random_verify_code";
+                            break;
+                        default:
+                            $checkCodeType="gen_gif_verify_code";
+                            break;
+                    }
+                    $pretempJsContent = str_ireplace('{CheckCodeType}', $checkCodeType, $pretempJsContent);
+
+
+
+
                     $templateContent = str_ireplace('{VotePretempJs'.$voteId.'}', $pretempJsContent, $templateContent);
                 }
 
