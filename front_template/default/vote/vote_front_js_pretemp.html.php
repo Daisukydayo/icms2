@@ -1,20 +1,20 @@
-<style type="text/css">#vote_check_code_class{VoteId} {float:left;}
-    #vote_check_code_class{VoteId} ul {text-align:center;margin-left:0px;padding-left:0px}
-    #vote_check_code_class{VoteId} li {list-style-type: none;text-align: left;float:left;}
+<style type="text/css">#votecheckcodeclass{VoteId} {float:left;}
+    #votecheckcodeclass{VoteId} ul {text-align:center;margin-left:0px;padding-left:0px}
+    #votecheckcodeclass{VoteId} li {list-style-type: none;text-align: left;float:left;}
 </style>
 <div style="lint-height:0px;height:0px;clear:both;font-size:1px;position:absolute;z-index: 50;display:none" id="votecheckcodeclass{VoteId}">
     <script>
         function newimg{VoteId}()
         {
-            return '<img id=\"checkimg{VoteId}\"  style=\"cursor:pointer\" src=\"/default.php?mod=common&a=gen_gif_verify_code&sn=votecheckcode{VoteId}&n='+Math.random()+'\" onclick=\"$(this).replaceWith(newimg{VoteId}());\" title=\"换一个\" alt=\"换一个\" />'
+            return '<img id=\"checkimg{VoteId}\"  style=\"cursor:pointer\" src=\"/default.php?mod=common&a={CheckCodeType}&sn=check_code{VoteId}&n='+Math.random()+'\" onclick=\"$(this).replaceWith(newimg{VoteId}());\" title=\"换一个\" alt=\"换一个\" />'
         }
     </script>
-    <ul><li>验证码：<input type="text" style="width:60px" maxlength="6" id="checkcode{VoteId}" name="checkcode{VoteId}" />
-            <input type="button" style="width:60px;display:none"  value="提交" id="checkcode_sub{VoteId}" idvalue1="" idvalue2=""/>
-            <input type="button" style="width:60px;display:none"  value="提交" id="checkcode_all_sub{VoteId}" idvalue1="" idvalue2=""/>
-            <input type="button" style="width:60px;display:none"  value="提交" id="checkcode_score_sub{VoteId}" idvalue1="" idvalue2=""/>
+    <ul><li>验证码：<input type="text" style="width:60px;height:24px;font-size:14px" maxlength="6" id="checkcode{VoteId}" name="checkcode{VoteId}" />
+            <input type="button" style="width:60px;display:none;height:24px;font-size:14px"  value="提交" id="checkcode_sub{VoteId}" idvalue1="" idvalue2=""/>
+            <input type="button" style="width:60px;display:none;height:24px;font-size:14px"  value="提交" id="checkcode_all_sub{VoteId}" idvalue1="" idvalue2=""/>
+            <input type="button" style="width:60px;display:none;height:24px;font-size:14px"  value="提交" id="checkcode_score_sub{VoteId}" idvalue1="" idvalue2=""/>
         </li>
-        <li style="width:60px"><img id="checkimg{VoteId}" src="/default.php?mod=common&a=gen_gif_verify_code&sn=votecheckcode{VoteId}" style="cursor:pointer" title="换一个" alt="换一个" onclick="$(this).replaceWith(newimg{VoteId}());"/></li>
+        <li style="width:60px"><img id="checkimg{VoteId}" src="/default.php?mod=common&a={CheckCodeType}&sn=check_code{VoteId}" style="cursor:pointer" title="换一个" alt="换一个" onclick="$(this).replaceWith(newimg{VoteId}());"/></li>
     </ul>
 </div>
 <script type="text/javascript">
@@ -107,7 +107,7 @@
         var div=$("#"+voteSelectItemId);
         //div.html("<img src='/images/loading.gif' />");
         var param="vote_select_item"+voteItemId+"%5B%5D="+voteSelectItemId;
-        var url = "/default.php?mod=vote&a=vote&vote_id={VoteId}&sn=votecheckcode{VoteId}&check_code="+$("#checkcode{VoteId}").val();
+        var url = "/default.php?mod=vote&a=vote&vote_id={VoteId}&sn=check_code{VoteId}&check_code="+$("#checkcode{VoteId}").val();
         $.ajax({
             url:url,
             dataType: "jsonp",
@@ -122,7 +122,7 @@
                 var voterecordid = data["VoteRecordId"];
                 if(result==1) {
                     alert("投票成功，谢谢您的参与！");
-                    getItemList1075({VoteId});
+                    getItemList{VoteId}({VoteId});
                 }
                 else if(result==-1) {alert("已超过每日投票上限");}//{alert("一个IP地址一天投票不能超过"+maxipnum+"票！");}
                 else if(result==-2) {alert("至少需要选择一项才能投票！");}

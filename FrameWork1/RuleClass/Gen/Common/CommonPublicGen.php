@@ -22,6 +22,21 @@ class CommonPublicGen extends BasePublicGen implements IBasePublicGen {
             case "gen_gif_verify_code":
                 self::GenGifVerifyCode();
                 break;
+            case "gen_math_plus_verify_code":
+                self::GenMathPlusVerifyCode();
+                break;
+            case "gen_math_minus_verify_code":
+                self::GenMathMinusVerifyCode();
+                break;
+            case "gen_math_multiple_verify_code":
+                self::GenMathMultipleVerifyCode();
+                break;
+            case "gen_random_verify_code":
+                self::GenRandomVerifyCode();
+                break;
+            case "gen_r_verify_code":
+                self::GenRVerifyCode();
+                break;
             case "check_verify_code":
                 $result = self::CheckVerifyCode();
                 break;
@@ -46,6 +61,58 @@ class CommonPublicGen extends BasePublicGen implements IBasePublicGen {
     }
 
     /**
+     * 生成加法验证码
+     */
+    private function GenMathPlusVerifyCode(){
+        $sessionName = Control::GetRequest("sn", "");
+        VerifyCode::GenMathPlus($sessionName);
+    }
+
+
+    /**
+     * 生成减法验证码
+     */
+    private function GenMathMinusVerifyCode(){
+        $sessionName = Control::GetRequest("sn", "");
+        VerifyCode::GenMathMinus($sessionName);
+    }
+
+
+    /**
+     * 生成乘法验证码
+     */
+    private function GenMathMultipleVerifyCode(){
+        $sessionName = Control::GetRequest("sn", "");
+        VerifyCode::GenMathMultiple($sessionName);
+    }
+
+
+    /**
+     * 生成随机种类验证码
+     */
+    private function GenRandomVerifyCode(){
+        $rand=rand(1,5);
+        switch($rand){
+            case "1":
+                self::GenVerifyCode();
+                break;
+            case "2":
+                self::GenGifVerifyCode();
+                break;
+            case "3":
+                self::GenMathPlusVerifyCode();
+                break;
+            case "4":
+                self::GenMathMinusVerifyCode();
+                break;
+            case "5":
+                self::GenMathMultipleVerifyCode();
+                break;
+        }
+    }
+
+
+    /**
      * 检查验证码是否正确
      * @return mixed 返回 -1:验证码无效 1:正确 null:默认值，未处理
      */
@@ -56,6 +123,9 @@ class CommonPublicGen extends BasePublicGen implements IBasePublicGen {
         $result = VerifyCode::Check($sessionName, $verifyCodeType, $verifyCodeValue);
         return $result;
     }
+
+
+
 
 }
 

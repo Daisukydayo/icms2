@@ -55,6 +55,9 @@ class DocumentNewsPublicGen extends BasePublicGen implements IBasePublicGen {
         $pageIndex = Control::GetRequest("p", 1);
         $parentId = Control::GetRequest("parent_id", 0);
         $pagerTempType = Control::GetRequest("ptt",1);
+        if($pagerTempType==""){
+            $pagerTempType=1; //修复ptt=”“时找不到文件的错误
+        }
 
         if ($pageIndex === 0) {
             $pageIndex = 1;

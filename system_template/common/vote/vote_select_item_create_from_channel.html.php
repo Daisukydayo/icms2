@@ -62,7 +62,7 @@
             });
 
             $(".btn_create").click(function(){
-                $(".btn_create").hide();
+                //$(".btn_create").hide();
                 $("#main_form").submit();
                 //var formData=$("#main_form").serialize();
                 //    $.ajax({

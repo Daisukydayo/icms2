@@ -18,10 +18,10 @@
 
 </script>
 <div id="pager_btn">
-    <div class="pb3" onclick="{JsFunctionName}({firstindex})"><a>首页</a></div>
-    <div {ShowPre} class="pb3" onclick="{JsFunctionName}({preindex})" ><a>上页</a></div>
+    <div class="pb3" onclick="{JsFunctionName}({FirstIndex})"><a>首页</a></div>
+    <div {ShowPre} class="pb3" onclick="{JsFunctionName}({PreIndex})" ><a>上页</a></div>
     {PageList}
-    <div {shownext} class="pb3" onclick="{JsFunctionName}({nextindex})"><a><span id="linkNext">下页</span></a></div>
+    <div {shownext} class="pb3" onclick="{JsFunctionName}({NextIndex})"><a><span id="linkNext">下页</span></a></div>
     <div class="pb3" onclick="{JsFunctionName}({EndIndex})"><a>末页</a></div>
     <div class="pb5">{NowIndex}/{AllIndex}</div>
     <div class="pb5">总共{AllCount}/每页{PageSize}</div>

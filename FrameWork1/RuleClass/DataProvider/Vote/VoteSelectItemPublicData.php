@@ -49,7 +49,9 @@ class VoteSelectItemPublicData extends BasePublicData {
     {
         $result = null;
         if ($voteItemId > 0) {
-            $sql = "SELECT * FROM " . self::TableName_VoteSelectItem . " WHERE VoteItemId=:VoteItemId ORDER BY RecordCount DESC LIMIT $topCount";
+            $sql = "SELECT v.*,u.* FROM " . self::TableName_VoteSelectItem . " v
+             LEFT OUTER JOIN ". self::TableName_UploadFile ." u ON v.TitlePic1UploadFileId=u.UploadFileId
+             WHERE v.VoteItemId=:VoteItemId ORDER BY v.RecordCount DESC LIMIT $topCount";
             $dataProperty = new DataProperty();
             $dataProperty->AddField("VoteItemId", $voteItemId);
             $result = $this->dbOperator->GetArrayList($sql, $dataProperty);

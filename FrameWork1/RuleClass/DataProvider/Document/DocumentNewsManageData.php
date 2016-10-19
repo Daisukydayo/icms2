@@ -2367,7 +2367,7 @@ class DocumentNewsManageData extends BaseManageData
     public function GetListForVoteSelectItem($channelId,$itemCount=0,$state=30){
         $result=null;
         if($channelId>0){
-            $sql = "SELECT DocumentNewsTitle,DocumentNewsId,SiteId,PublishDate,DirectUrl FROM ".self::TableName_DocumentNews." WHERE ChannelId=:ChannelId AND State=:State ORDER BY Sort DESC LIMIT $itemCount;";
+            $sql = "SELECT DocumentNewsTitle,DocumentNewsId,SiteId,PublishDate,DirectUrl,TitlePic1UploadFileId,Sort FROM ".self::TableName_DocumentNews." WHERE ChannelId=:ChannelId AND State=:State ORDER BY Sort DESC LIMIT $itemCount;";
             $dataProperty = new DataProperty();
             $dataProperty->AddField("ChannelId", $channelId);
             $dataProperty->AddField("State", $state);

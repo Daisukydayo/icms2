@@ -298,6 +298,25 @@ class VoteRecordData extends BasePublicData
         }
         return $result;
     }
+
+
+
+    /**
+     * 获取一分钟内投票记录
+     * @return array
+     */
+    public function GetRecordInOneMinutes(){
+
+
+        $result = array();
+        $time=date("Y-m-d H:i:s",strtotime("-1 Minutes"));
+            $sql = "SELECT count(*)
+                    FROM " . self::TableName_VoteRecord . "
+                    WHERE CreateDate>'$time' ";
+            $dataProperty = new DataProperty();
+            $result = $this->dbOperator->GetInt($sql, $dataProperty);
+        return $result;
+    }
 }
 
 ?>

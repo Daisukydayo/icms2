@@ -515,9 +515,15 @@ class Template
 
                                         $childCount++;
 
+                                        if($type==self::TAG_TYPE_CHANNEL_LIST){
+                                            $childType=self::TAG_TYPE_DOCUMENT_NEWS_LIST;
+                                        }else{
+                                            $childType=$type;
+                                        }
+
                                         $listOfChild = self::ReplaceListItem(
                                             $j,
-                                            $type,
+                                            $childType,
                                             $itemRowTitleCount,
                                             $itemRowIntroCount,
                                             $headerRowTitleCount,

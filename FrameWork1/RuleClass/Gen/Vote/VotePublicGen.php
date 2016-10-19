@@ -65,11 +65,12 @@ class VotePublicGen extends BasePublicGen implements IBasePublicGen
      */
     private function GenVote() {
         if (!empty($_GET)) {
-            session_start();
+            //session_start();
             $voteId = intval(Control::GetRequest("vote_id", "0"));
             $userId = Control::GetUserID();
             $sessionName = Control::GetRequest("sn","");
-            $code = Control::GetRequest("check_code" . $voteId,"");
+            //$code = Control::GetRequest("check_code" . $voteId,"");
+            $code = Control::GetRequest("check_code","");
             $createDate = date("Y-m-d H:i:s", time());
             $ipAddress = Control::GetIP();
             $agent = Control::GetOS() . "与" . Control::GetBrowser();
@@ -83,8 +84,9 @@ class VotePublicGen extends BasePublicGen implements IBasePublicGen
             $arrRow = $votePublicData->GetVoteRow($voteId);
             $isCheckCode = $arrRow['IsCheckCode'];
             if ($isCheckCode == "1") {//如果启用了验证码先做验证码判断
-                if (VerifyCode::Check($sessionName, 0, $code)==1)
+                if (VerifyCode::Check($sessionName, 0, $code)<0){
                     return Control::GetRequest("jsonpcallback","") . '({"result":"-5"})';
+                }
             }
             //销毁验证码session
             unset($_SESSION[$sessionName]);

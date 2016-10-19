@@ -13,6 +13,7 @@ class VerifyCode {
      */
     public static function Gen($sessionName) {
         //将生成的验证码写入session，备验证页面使用
+        ini_set("session.cookie_lifetime","3600");
         Session_start();
         if (strlen($sessionName) > 0) {
             //随机生成一个4位数的数字验证码
@@ -171,6 +172,136 @@ class VerifyCode {
         echo $gif->GetAnimation();
     }
 
+
+    /**
+     * 生成加法验证码图片
+     * @param string $sessionName Session的名称
+     * @param string $content 要生成的内容值，默认为空
+     * @param int $width 图片宽度
+     * @param int $height 图片高度
+     */
+    public static function GenMathPlus($sessionName, $content = '', $width = 75, $height = 25) {
+        $im = imagecreate($width, $height);
+
+        //imagecolorallocate($im, 14, 114, 180); // background color
+        $red = imagecolorallocate($im, 255, 0, 0);
+        $white = imagecolorallocate($im, 255, 255, 255);
+
+        $num1 = rand(1, 20);
+        $num2 = rand(1, 20);
+
+        Session_start();
+        $_SESSION[$sessionName] = $num1 + $num2;
+
+        $gray = imagecolorallocate($im, 118, 151, 199);
+        $black = imagecolorallocate($im, mt_rand(0, 100), mt_rand(0, 100), mt_rand(0, 100));
+
+        //画背景
+        imagefilledrectangle($im, 0, 0, 100, 24, $black);
+        //在画布上随机生成大量点，起干扰作用;
+        for ($i = 0; $i < 80; $i++) {
+            imagesetpixel($im, rand(0, $width), rand(0, $height), $gray);
+        }
+
+        imagestring($im, 5, 5, 4, $num1, $red);
+        imagestring($im, 5, 30, 3, "+", $red);
+        imagestring($im, 5, 45, 4, $num2, $red);
+        imagestring($im, 5, 70, 3, "=", $red);
+        imagestring($im, 5, 80, 2, "?", $white);
+
+        header("Content-type: image/png");
+        imagepng($im);
+        imagedestroy($im);
+    }
+
+
+    /**
+     * 生成减法验证码图片
+     * @param string $sessionName Session的名称
+     * @param string $content 要生成的内容值，默认为空
+     * @param int $width 图片宽度
+     * @param int $height 图片高度
+     */
+    public static function GenMathMinus($sessionName, $content = '', $width = 75, $height = 25) {
+        $im = imagecreate($width, $height);
+
+        //imagecolorallocate($im, 14, 114, 180); // background color
+        $red = imagecolorallocate($im, 255, 0, 0);
+        $white = imagecolorallocate($im, 255, 255, 255);
+
+        $num1 = rand(1, 20);
+        $num2 = rand(1, 20);
+
+        if($num1<$num2){
+            $num_t=$num1;
+            $num1=$num2;
+            $num2=$num_t;
+        }
+        Session_start();
+        $_SESSION[$sessionName] = $num1 - $num2;
+
+        $gray = imagecolorallocate($im, 118, 151, 199);
+        $black = imagecolorallocate($im, mt_rand(0, 100), mt_rand(0, 100), mt_rand(0, 100));
+
+        //画背景
+        imagefilledrectangle($im, 0, 0, 100, 24, $black);
+        //在画布上随机生成大量点，起干扰作用;
+        for ($i = 0; $i < 80; $i++) {
+            imagesetpixel($im, rand(0, $width), rand(0, $height), $gray);
+        }
+
+        imagestring($im, 5, 5, 4, $num1, $red);
+        imagestring($im, 5, 30, 3, "-", $red);
+        imagestring($im, 5, 45, 4, $num2, $red);
+        imagestring($im, 5, 70, 3, "=", $red);
+        imagestring($im, 5, 80, 2, "?", $white);
+
+        header("Content-type: image/png");
+        imagepng($im);
+        imagedestroy($im);
+    }
+
+
+    /**
+     * 生成乘法验证码图片
+     * @param string $sessionName Session的名称
+     * @param string $content 要生成的内容值，默认为空
+     * @param int $width 图片宽度
+     * @param int $height 图片高度
+     */
+    public static function GenMathMultiple($sessionName, $content = '', $width = 75, $height = 25) {
+        $im = imagecreate($width, $height);
+
+        //imagecolorallocate($im, 14, 114, 180); // background color
+        $red = imagecolorallocate($im, 255, 0, 0);
+        $white = imagecolorallocate($im, 255, 255, 255);
+
+        $num1 = rand(1, 9);
+        $num2 = rand(1, 20);
+
+        Session_start();
+        $_SESSION[$sessionName] = $num1 * $num2;
+
+        $gray = imagecolorallocate($im, 118, 151, 199);
+        $black = imagecolorallocate($im, mt_rand(0, 100), mt_rand(0, 100), mt_rand(0, 100));
+
+        //画背景
+        imagefilledrectangle($im, 0, 0, 100, 24, $black);
+        //在画布上随机生成大量点，起干扰作用;
+        for ($i = 0; $i < 80; $i++) {
+            imagesetpixel($im, rand(0, $width), rand(0, $height), $gray);
+        }
+
+        imagestring($im, 5, 5, 4, $num1, $red);
+        imagestring($im, 5, 30, 3, "X", $red);
+        imagestring($im, 5, 45, 4, $num2, $red);
+        imagestring($im, 5, 70, 3, "=", $red);
+        imagestring($im, 5, 80, 2, "?", $white);
+
+        header("Content-type: image/png");
+        imagepng($im);
+        imagedestroy($im);
+    }
 }
 
 ?>

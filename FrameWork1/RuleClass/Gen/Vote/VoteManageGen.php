@@ -24,6 +24,9 @@ class VoteManageGen extends BaseManageGen implements IBaseManageGen
             case "async_modify_state":
                 $result = self::AsyncModifyState();
                 break;
+            case "check_vote_log_in_one_min":
+                $result = self::CheckVoteLogInOneMin();
+                break;
             case "modify":
                 $result = self::GenModify();
                 break;
@@ -387,6 +390,24 @@ class VoteManageGen extends BaseManageGen implements IBaseManageGen
         }
         return $tempContent;
     }
+
+
+    /**
+     * 检查一分钟内投票数
+     * @return mixed|string
+     */
+    private function CheckVoteLogInOneMin()
+    {
+        $recordInOneMin=-1;
+        $manageUserId=Control::GetManageUserId();
+        if($manageUserId>0){
+            $voteRecordData=new VoteRecordData();
+            $recordInOneMin=$voteRecordData->GetRecordInOneMinutes();
+        }
+        echo "一分钟内投票:".$recordInOneMin."</br>";
+        return ;
+    }
+
 
 }
 

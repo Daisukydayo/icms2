@@ -174,6 +174,9 @@ class TemplateLibraryManageGen extends BaseManageGen implements IBaseManageGen {
                     $template["TemplateContentForMobile"] = strtr($template["TemplateContentForMobile"], $replaceArray);
                     $template["TemplateContentForPad"] = strtr($template["TemplateContentForPad"], $replaceArray);
                     $template["TemplateContentForTV"] = strtr($template["TemplateContentForTV"], $replaceArray);
+
+
+                    $template["Attachment"] = null;//模板库附件只做备份，不导入到节点，不做ftp发布
                     $template=self::ImportTemplate($template);
 
                     $newTemplate=$templateLibraryChannelContentManageData->Create($template);

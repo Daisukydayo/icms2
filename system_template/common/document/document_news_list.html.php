@@ -161,7 +161,8 @@
                 <input id="btn_create" class="btn2" idvalue="{ChannelId}" value="新建文档" title="在本频道新建资讯类的文档" type="button"/>
                 <input id="btn_move" class="btn2" value="移动" idvalue="{ChannelId}" title="移动本频道文档至其它频道，请先在下面文档中勾选需要移动的文档" type="button"/>
                 <input id="btn_copy" class="btn2" value="复制" idvalue="{ChannelId}" title="复制本频道文档至其它频道，请先在下面文档中勾选需要复制的文档" type="button"/>
-                <input id="btn_batch_publish" class="btn2" value="批量发布" title="批量发布" type="button"/>
+                <input id="btn_batch_publish_selected" class="btn2" value="批量发布已选" title="批量发布已选" type="button"/>
+                <input id="btn_batch_publish" class="btn2" value="批量发布站点/节点" title="批量发布站点/节点" type="button"/>
                 <input id="btn_batch_manage_comment" class="btn2" value="评论管理" title="评论管理" type="button"/>
             </td>
             <td style="text-align: right; margin-right: 8px;">
@@ -211,7 +212,7 @@
                         <tr class="grid_item">
                             <td class="spe_line2" style="width:30px;text-align:center;">
                                 <label>
-                                    <input class="input_select" type="checkbox" name="input_select" value="{f_DocumentNewsId}"/>
+                                    <input class="input_select" type="checkbox" name="input_select" value="{f_DocumentNewsId}" idvalue="{f_DocumentNewsId}"/>
                                 </label></td>
                             <td class="spe_line2" style="width:40px;text-align:center;"><img class="btn_modify" src="/system_template/{template_name}/images/manage/edit.gif" idvalue="{f_DocumentNewsId}" alt="编辑"/></td>
                             <td class="spe_line2" style="width:40px;text-align:center;"><span class="span_state" id="span_state_{f_DocumentNewsId}">{f_State}</span></td>

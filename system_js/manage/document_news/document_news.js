@@ -184,6 +184,61 @@ $(function() {
     });
 
 
+    //批量发布已选
+    var btnBatchPublishSelected=$("#btn_batch_publish_selected");
+    btnBatchPublishSelected.click(function(){
+
+        var batchIdStr="";
+        var batchIdArr=[];
+        $('input:checkbox[name=input_select]:checked').each(function(i){
+            if(i==0){
+                batchIdStr+=$(this).attr("idvalue");
+                batchIdArr[batchIdArr.length]=$(this).attr("idvalue");
+            }else{
+                batchIdStr+=","+$(this).attr("idvalue");
+                batchIdArr[batchIdArr.length]=$(this).attr("idvalue");
+            }
+        });
+
+        if(batchIdStr!=""){
+            var dialogBox = $("#dialog_box");
+            dialogBox.attr("title","批量发布文档");
+            dialogBox.dialog({
+                height: 140,
+                modal: true
+            });
+
+            var dialogContent = $("#dialog_content");
+            dialogContent.html("开始发布");
+
+            $.post("/default.php?secu=manage&mod=document_news&m=async_batch_publish_selected&document_news_id_str=" + batchIdStr + "", {
+                resultbox: $(this).html()
+            }, function(result) {
+                dialogContent.html('<img src="/system_template/common/images/spinner2.gif" /> 正在发布...');
+                if (parseInt(result) == window.PUBLISH_DOCUMENT_NEWS_RESULT_DOCUMENT_NEWS_ID_ERROR) {
+                    dialogContent.html('资讯id小于0');
+                }else if (parseInt(result) == window.PUBLISH_DOCUMENT_NEWS_RESULT_CHANNEL_ID_ERROR) {
+                    dialogContent.html('频道id小于0');
+                }else if (parseInt(result) == window.PUBLISH_DOCUMENT_NEWS_RESULT_STATE_ERROR) {
+                    dialogContent.html('状态不正确，必须为[终审]或[已发]状态的文档才能发布!');
+                }else if (parseInt(result) == window.PUBLISH_DOCUMENT_NEWS_RESULT_NO_RIGHT) {
+                    dialogContent.html('没有发布此文档的权限!');
+                }else{
+                    dialogContent.html("发布完成<br />"+result);
+
+                    for(var i=0;i<batchIdArr.length;++i){
+                        $("#span_state_"+batchIdArr[i]).html(formatDocumentNewsState(window.DOCUMENT_NEWS_STATE_PUBLISHED));
+                    }
+                    //var spanState = $("#span_state_" + documentNewsId);
+                    //spanState.html("<"+"span style='color:#006600'>已发<"+"/span>");
+                    //window.location.href = window.location.href;
+                }
+            });
+        }
+
+    });
+
+
     //改变向上移动（排序）
     $(".btn_up").click(function(event) {
         var documentNewsId = $(this).attr('idvalue');
@@ -383,13 +438,37 @@ function formatDocumentNewsState(state){
 
 /**
  *
+ * @param {int} selectedDocumentNewsId 资讯id
+ * @param {int} state 状态
+ * @constructor
+ */
+function documentNewsChangeState(selectedDocumentNewsId, state) {
+    var batchIdArr=[];
+    $('input:checkbox[name=input_select]:checked').each(function(i){
+            batchIdArr[batchIdArr.length]=$(this).attr("idvalue");
+    });
+
+    if(batchIdArr.length==0){
+        batchIdArr[0]=selectedDocumentNewsId;
+    }
+
+    for(var i=0;i<batchIdArr.length;++i){
+        new DocumentNewsUpdateState(batchIdArr[i],state);
+    }
+}
+
+
+
+/**
+ *
  * @param {int} documentNewsId 资讯id
  * @param {int} state 状态
  * @constructor
  */
-function documentNewsChangeState(documentNewsId, state) {
-    $("#span_state" + documentNewsId).html("<img src='/system_template/common/images/loading1.gif' />");
+function DocumentNewsUpdateState(documentNewsId, state){
 
+
+    $("#span_state" + documentNewsId).html("<img src='/system_template/common/images/loading1.gif' />");
     $.post("/default.php?secu=manage&mod=document_news&m=async_modify_state&document_news_id=" + documentNewsId + "&state=" + state, {
         resultbox: $(this).html()
     }, function(xml) {

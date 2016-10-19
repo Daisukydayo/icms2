@@ -7,11 +7,13 @@
     <script type="text/javascript" src="/system_js/xheditor-1.1.14/xheditor-1.1.14-zh-cn.min.js"></script>
     <script type="text/javascript" src="/system_js/ajax_file_upload.js"></script>
     <script type="text/javascript" src="/system_js/upload_file.js"></script>
+    <script src="/system_js/tiny_mce/tiny_mce_src.js"></script>
+    <script src="/system_js/tiny_mce/editor.js?uploadfiletype=1"></script>
     <script type="text/javascript">
         <!--
-        var editor;
+        //var editor;
         $(function () {
-            editor = $('#f_ChannelIntro').xheditor();
+            //editor = $('#f_ChannelIntro').xheditor();
             $("#f_CreateDate").datepicker({
                 dateFormat: 'yy-mm-dd',
                 numberOfMonths: 1,
@@ -129,12 +131,12 @@
             <input id="f_Sort" name="f_Sort" type="text" value="{Sort}" maxlength="10" class="input_number"/>
         </td>
     </tr>
-    <tr>
+    <!--<tr>
         <td class="spe_line" height="50" align="right"><label for="f_SortChannelId">聚合排序号频道ID：</label></td>
         <td class="spe_line">
             <input id="f_SortChannelId" name="f_SortChannelId" type="text" value="{SortChannelId}" maxlength="100" style="width:300px" class="input_box"/><br />(聚合排序号用于在所输入的频道ID中取得最大排序号的值，适应于多个频道聚合的节点使用，id用半角,分隔)
         </td>
-    </tr>
+    </tr>-->
 
 
 </table>
@@ -308,7 +310,7 @@
         <tr>
             <td class="spe_line" height="30" align="right"><label for="f_ChannelIntro">频道介绍：</label></td>
             <td class="spe_line">
-                <textarea cols="30" rows="30" id="f_ChannelIntro" name="f_ChannelIntro" style="width:90%;height:250px;">{ChannelIntro}</textarea>
+                <textarea cols="30" rows="30" id="f_ChannelIntro"  class="mceEditor"  name="f_ChannelIntro" style="width:90%;height:250px;">{ChannelIntro}</textarea>
             </td>
         </tr>
         <tr>
@@ -347,14 +349,14 @@
     <div class="type_17" style="display: none;">
         <table width="99%" align="center" border="0" cellspacing="0" cellpadding="0">
 
-            <tr>
+            <!--<tr>
                 <td class="spe_line" width="20%" height="30" align="right"><label for="f_CollectChannelId">聚合的频道id：</label>
                 </td>
                 <td class="spe_line">
                     <input id="f_CollectChannelId" name="f_CollectChannelId" type="text" value="{CollectChannelId}" class="input_box"
                            style="width: 500px;" maxlength="300"/>（用半角,分隔）
                 </td>
-            </tr>
+            </tr>-->
 
         </table>
     </div>

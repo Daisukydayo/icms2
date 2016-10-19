@@ -39,6 +39,9 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
             case "async_publish":
                 $result = self::AsyncPublish();
                 break;
+            case "async_batch_publish_selected":
+                $result = self::AsyncBatchPublishSelected();
+                break;
             case "async_modify_sort":
                 $result = self::AsyncModifySort();
                 break;
@@ -864,6 +867,109 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
         }
         return $result;
     }
+
+
+    /**
+     *批量发布已选
+     */
+    private function AsyncBatchPublishSelected(){
+
+        $result = '';
+        //$documentNewsId = Control::GetRequest("document_news_id_str", "");
+        $documentNewsIdStr=$_GET["document_news_id_str"];
+
+        $currentChannelId=0;//在循环内赋值，供循环外发布文件用
+        $currentSiteId=0;
+
+        if($documentNewsIdStr !=""&&$documentNewsIdStr!=null){
+
+            $documentNewsManageData = new DocumentNewsManageData();
+            $channelManageData = new ChannelManageData();
+            $manageUserAuthorityManageData = new ManageUserAuthorityManageData();
+            $publishQueueManageData = new PublishQueueManageData();
+
+            $arrayOfDocumentNewsIds=explode(",",$documentNewsIdStr);
+            for($i=0;$i<count($arrayOfDocumentNewsIds);++$i){
+                $documentNewsId=$arrayOfDocumentNewsIds[$i];
+
+                if ($documentNewsId > 0) {
+                    $channelId = $documentNewsManageData->GetChannelId($documentNewsId, true);
+                    $siteId = $channelManageData->GetSiteId($channelId, true);
+
+
+                    $currentChannelId=$channelId;
+                    $currentSiteId=$siteId;
+
+                    $nowManageUserId = Control::GetManageUserId();
+                    ///////////////判断是否有操作权限///////////////////
+                    //1 发布本频道文档权限
+                    $can = $manageUserAuthorityManageData->CanChannelPublish($siteId, $channelId, $nowManageUserId);
+
+                    if (!$can) {
+                        //$result = $result = DefineCode::PUBLISH + self::PUBLISH_DOCUMENT_NEWS_RESULT_NO_RIGHT;
+                        $result.="没有权限！<br />";
+                    } else {
+
+                        //删除缓冲
+                        parent::DelAllCache();
+
+                        $executeTransfer = false;//不分别进行传输
+                        $publishChannel=false;
+                        parent::PublishDocumentNews($documentNewsId, $publishQueueManageData, $executeTransfer, $publishChannel);
+
+                        sleep(0.1);
+                    }
+
+
+                }
+            }
+
+            //执行传输
+            parent::TransferPublishQueue($publishQueueManageData, $currentSiteId);
+            for ($i = 0;$i< count($publishQueueManageData->Queue); $i++) {
+
+                $publishResult = "";
+
+                if(intval($publishQueueManageData->Queue[$i]["Result"]) ==
+                    abs(DefineCode::PUBLISH) + BaseManageGen::PUBLISH_TRANSFER_RESULT_SUCCESS
+                ){
+                    $publishResult = "Ok";
+                    $result .= $publishQueueManageData->Queue[$i]["DestinationPath"].' -> '.$publishResult
+                        .'<br />'
+                    ;
+                }else{
+                    $result .= "<span style='color:red'>ERROR</span><br />";
+                }
+            }
+
+            //同步发布节点
+            $channelPublishResult=self::PublishChannel($currentChannelId, $publishQueueManageData);
+
+            if($channelPublishResult == (abs(DefineCode::PUBLISH) + BaseManageGen::PUBLISH_CHANNEL_RESULT_FINISHED)){
+                $channelPublishResult = '';
+                for ($i = 0;$i< count($publishQueueManageData->Queue); $i++) {
+
+                    $channelPublishResult = "";
+
+                    if(intval($publishQueueManageData->Queue[$i]["Result"]) ==
+                        abs(DefineCode::PUBLISH) + BaseManageGen::PUBLISH_TRANSFER_RESULT_SUCCESS
+                    ){
+                        $channelPublishResult = "Ok";
+                    }
+
+
+                    $result .= $publishQueueManageData->Queue[$i]["DestinationPath"].' -> '.$channelPublishResult
+                        .'<br />'
+                    ;
+                }
+                //print_r($publishQueueManageData->Queue);
+            }
+            $result.=$channelPublishResult;
+
+        }
+        return $result;
+    }
+
 
     /**
      * 生成资讯管理列表页面
