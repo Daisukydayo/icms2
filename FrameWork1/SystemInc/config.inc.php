@@ -9,11 +9,11 @@ $incSystemName = 'iCMS';
  * 系统数据库配置
  */
 $incDatabaseInfo = array();
-$incDatabaseInfo[] = '130.1.0.134';
+$incDatabaseInfo[] = 'host';
 $incDatabaseInfo[] = 3306;
-$incDatabaseInfo[] = 'dbcscms2';
-$incDatabaseInfo[] = 'root';
-$incDatabaseInfo[] = 'csolbbs2010';
+$incDatabaseInfo[] = 'dbname';
+$incDatabaseInfo[] = 'username';
+$incDatabaseInfo[] = 'pass';
 $incDatabaseInfo[] = '0'; //debug
 $incDatabaseInfo = implode('|',$incDatabaseInfo);
 
@@ -29,7 +29,6 @@ $incDomain = array();
 $incDomain['webapp'] = 'http://localhost';
 $incDomain['manage'] = 'http://localhost';
 
-
 /**
  * 是否开启管理日志
  */
@@ -38,7 +37,7 @@ $incOpenManageUserLog = true;
 /**
  * 安全ip设置
  */
-$incSecurityIP = array('130.1.0','20.20.20','40.40.40','130.0.152','222.240.183.54','222.240.128.2','113.240.237');
+$incSecurityIP = array('130.1.0','20.20.20','40.40.40','130.0.152','113.240.237','222.240.248.34');  //'222.240.183.54','222.240.128.2', --wanbao？
 $incSecurityIP = implode('|',$incSecurityIP);
 
 $incMemcachedServers = array(
