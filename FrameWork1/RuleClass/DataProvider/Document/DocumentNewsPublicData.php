@@ -1037,7 +1037,7 @@ class DocumentNewsPublicData extends BasePublicData {
                     LEFT OUTER JOIN " .self::TableName_UploadFile." uf3 on dn.TitlePic3UploadFileId=uf3.UploadFileId
 
             WHERE dn.State=:State " . $searchSql . "
-            ORDER BY dn.Sort DESC, dn.PublishDate DESC
+            ORDER BY dn.Sort DESC, dn.PublishDate DESC, dn.DocumentNewsId DESC
             LIMIT " . $pageBegin . "," . $pageSize . "";
 
 

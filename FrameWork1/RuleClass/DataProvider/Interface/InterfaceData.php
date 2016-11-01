@@ -96,16 +96,19 @@ class InterfaceData extends BaseData{
                         if($result["icms1"][0]["SiteUrl"]){
                             $siteUrl=$result["icms1"][0]["SiteUrl"];
                             foreach($result["icms1"] as $k => & $document ){
-                                if(substr($document["TitlePic1UploadFilePath"],0,4)!="http"&&
+                                if(isset($document["TitlePic1UploadFilePath"])&&
+                                    substr($document["TitlePic1UploadFilePath"],0,4)!="http"&&
                                     substr($document["TitlePic1UploadFilePath"],0,4)!=""
                                 ){
                                     $document["TitlePic1UploadFilePath"]=$siteUrl.$document["TitlePic1UploadFilePath"];
                                 }
-                                if(substr($document["TitlePic2UploadFilePath"],0,4)!="http"&&
+                                if(isset($document["TitlePic2UploadFilePath"])&&
+                                    substr($document["TitlePic2UploadFilePath"],0,4)!="http"&&
                                     substr($document["TitlePic1UploadFilePath"],0,4)!=""){
                                     $document["TitlePic2UploadFilePath"]=$siteUrl.$document["TitlePic2UploadFilePath"];
                                 }
-                                if(substr($document["TitlePic3UploadFilePath"],0,4)!="http"&&
+                                if(isset($document["TitlePic3UploadFilePath"])&&
+                                    substr($document["TitlePic3UploadFilePath"],0,4)!="http"&&
                                     substr($document["TitlePic1UploadFilePath"],0,4)!=""){
                                     $document["TitlePic3UploadFilePath"]=$siteUrl.$document["TitlePic3UploadFilePath"];
                                 }

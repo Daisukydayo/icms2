@@ -1732,148 +1732,214 @@ class DocumentNewsManageData extends BaseManageData
             }
             foreach($arrayOfDocumentNewsList as $documentNews){
                 $sort+=1;                           //排序号+1
+                $fieldNames="";
+                $values="";
+                $dataProperty = new DataProperty();
+
+
+                if(isset($targetSiteId)&&$targetSiteId>0){
+                    $fieldNames.='`SiteId`,';
+                    $values.=':SiteId,';
+                    $dataProperty->AddField("SiteId", $targetSiteId);
+                }
+                if(isset($targetCid)&&$targetCid>0){
+                    $fieldNames.='`ChannelId`,';
+                    $values.=':ChannelId,';
+                    $dataProperty->AddField("ChannelId", $targetCid);
+                }
+                if(isset($documentNews["DocumentNewsTitle"])){
+                    $fieldNames.='`DocumentNewsTitle`,';
+                    $values.=':DocumentNewsTitle,';
+                    $dataProperty->AddField("DocumentNewsTitle", $documentNews["DocumentNewsTitle"]);
+                }
+                if(isset($documentNews["DocumentNewsTitle"])){
+                    $fieldNames.='`DocumentNewsSubTitle`,';
+                    $values.=':DocumentNewsSubTitle,';
+                    $dataProperty->AddField("DocumentNewsSubTitle", $documentNews["DocumentNewsSubTitle"]);
+                }
+                if(isset($documentNews["DocumentNewsCiteTitle"])){
+                    $fieldNames.='`DocumentNewsCiteTitle`,';
+                    $values.=':DocumentNewsCiteTitle,';
+                    $dataProperty->AddField("DocumentNewsCiteTitle", $documentNews["DocumentNewsCiteTitle"]);
+                }
+                if(isset($documentNews["DocumentNewsShortTitle"])){
+                    $fieldNames.='`DocumentNewsShortTitle`,';
+                    $values.=':DocumentNewsShortTitle,';
+                    $dataProperty->AddField("DocumentNewsShortTitle", $documentNews["DocumentNewsShortTitle"]);
+                }
+                if(isset($documentNews["DocumentNewsIntro"])){
+                    $fieldNames.='`DocumentNewsIntro`,';
+                    $values.=':DocumentNewsIntro,';
+                    $dataProperty->AddField("DocumentNewsIntro", $documentNews["DocumentNewsIntro"]);
+                }
+                if(isset($documentNews["CreateDate"])){
+                    $fieldNames.='`CreateDate`,';
+                    $values.=':CreateDate,';
+                    $dataProperty->AddField("CreateDate", $documentNews["CreateDate"]);
+                }
+                if(isset($documentNews["ManageUserId"])){
+                    $fieldNames.='`ManageUserId`,';
+                    $values.=':ManageUserId,';
+                    $dataProperty->AddField("ManageUserId", $manageUserId);
+                }
+                if(isset($documentNews["ManageUserName"])){
+                    $fieldNames.='`ManageUserName`,';
+                    $values.=':ManageUserName,';
+                    $dataProperty->AddField("ManageUserName", $manageUserName);
+                }
+                if(isset($documentNews["UserId"])){
+                    $fieldNames.='`UserId`,';
+                    $values.=':UserId,';
+                    $dataProperty->AddField("UserId", $documentNews["UserId"]);
+                }
+                if(isset($documentNews["UserName"])){
+                    $fieldNames.='`UserName`,';
+                    $values.=':UserName,';
+                    $dataProperty->AddField("UserName", $documentNews["UserName"]);
+                }
+                if(isset($documentNews["Author"])){
+                    $fieldNames.='`Author`,';
+                    $values.=':Author,';
+                    $dataProperty->AddField("Author", $documentNews["Author"]);
+                }
+                if(isset($documentNews["DocumentNewsType"])){
+                    $fieldNames.='`DocumentNewsType`,';
+                    $values.=':DocumentNewsType,';
+                    $dataProperty->AddField("DocumentNewsType", $documentNews["DocumentNewsType"]);
+                }
+                if(isset($documentNews["DirectUrl"])){
+                    $fieldNames.='`DirectUrl`,';
+                    $values.=':DirectUrl,';
+                    $dataProperty->AddField("DirectUrl", $documentNews["DirectUrl"]);
+                }
+                if(isset($documentNews["DocumentNewsContent"])){
+                    $fieldNames.='`DocumentNewsContent`,';
+                    $values.=':DocumentNewsContent,';
+                    $dataProperty->AddField("DocumentNewsContent", $documentNews["DocumentNewsContent"]);
+                }
+                if(isset($documentNews["ShowDate"])){
+                    $fieldNames.='`ShowDate`,';
+                    $values.=':ShowDate,';
+                    $dataProperty->AddField("ShowDate", $documentNews["ShowDate"]);
+                }
+                if(isset($documentNews["SourceName"])){
+                    $fieldNames.='`SourceName`,';
+                    $values.=':SourceName,';
+                    $dataProperty->AddField("SourceName", $documentNews["SourceName"]);
+                }
+                if(isset($documentNews["DocumentNewsMainTag"])){
+                    $fieldNames.='`DocumentNewsMainTag`,';
+                    $values.=':DocumentNewsMainTag,';
+                    $dataProperty->AddField("DocumentNewsMainTag", $documentNews["DocumentNewsMainTag"]);
+                }
+                if(isset($documentNews["DocumentNewsTag"])){
+                    $fieldNames.='`DocumentNewsTag`,';
+                    $values.=':DocumentNewsTag,';
+                    $dataProperty->AddField("DocumentNewsTag", $documentNews["DocumentNewsTag"]);
+                }
+                if(isset($documentNews["Sort"])){
+                    $fieldNames.='`Sort`,';
+                    $values.=':Sort,';
+                    $dataProperty->AddField("Sort", $sort);
+                }
+                if(isset($documentNews["TitlePic1UploadFileId"])){
+                    $fieldNames.='`TitlePic1UploadFileId`,';
+                    $values.=':TitlePic1UploadFileId,';
+                    $dataProperty->AddField("TitlePic1UploadFileId", $documentNews["TitlePic1UploadFileId"]);
+                }
+                if(isset($documentNews["TitlePic2UploadFileId"])){
+                    $fieldNames.='`TitlePic2UploadFileId`,';
+                    $values.=':TitlePic2UploadFileId,';
+                    $dataProperty->AddField("TitlePic2UploadFileId", $documentNews["TitlePic2UploadFileId"]);
+                }
+                if(isset($documentNews["TitlePic3UploadFileId"])){
+                    $fieldNames.='`TitlePic3UploadFileId`,';
+                    $values.=':TitlePic3UploadFileId,';
+                    $dataProperty->AddField("TitlePic3UploadFileId", $documentNews["TitlePic3UploadFileId"]);
+                }
+                if(isset($documentNews["DocumentNewsTitleColor"])){
+                    $fieldNames.='`DocumentNewsTitleColor`,';
+                    $values.=':DocumentNewsTitleColor,';
+                    $dataProperty->AddField("DocumentNewsTitleColor", $documentNews["DocumentNewsTitleColor"]);
+                }
+                if(isset($documentNews["DocumentNewsTitleBold"])){
+                    $fieldNames.='`DocumentNewsTitleBold`,';
+                    $values.=':DocumentNewsTitleBold,';
+                    $dataProperty->AddField("DocumentNewsTitleBold", $documentNews["DocumentNewsTitleBold"]);
+                }
+                if(isset($documentNews["OpenComment"])){
+                    $fieldNames.='`OpenComment`,';
+                    $values.=':OpenComment,';
+                    $dataProperty->AddField("OpenComment", $documentNews["OpenComment"]);
+                }
+                if(isset($documentNews["ShowHour"])){
+                    $fieldNames.='`ShowHour`,';
+                    $values.=':ShowHour,';
+                    $dataProperty->AddField("ShowHour", $documentNews["ShowHour"]);
+                }
+                if(isset($documentNews["ShowMinute"])){
+                    $fieldNames.='`ShowMinute`,';
+                    $values.=':ShowMinute,';
+                    $dataProperty->AddField("ShowMinute", $documentNews["ShowMinute"]);
+                }
+                if(isset($documentNews["ShowSecond"])){
+                    $fieldNames.='`ShowSecond`,';
+                    $values.=':ShowSecond,';
+                    $dataProperty->AddField("ShowSecond", $documentNews["ShowSecond"]);
+                }
+                if(isset($documentNews["UploadFiles"])){
+                    $fieldNames.='`UploadFiles`,';
+                    $values.=':UploadFiles,';
+                    $dataProperty->AddField("UploadFiles", $documentNews["UploadFiles"]);
+                }
+                if(isset($documentNews["IsHot"])){
+                    $fieldNames.='`IsHot`,';
+                    $values.=':IsHot,';
+                    $dataProperty->AddField("IsHot", $documentNews["IsHot"]);
+                }
+                if(isset($documentNews["RecLevel"])){
+                    $fieldNames.='`RecLevel`,';
+                    $values.=':RecLevel,';
+                    $dataProperty->AddField("RecLevel", $documentNews["RecLevel"]);
+                }
+                if(isset($documentNews["ShowPicMethod"])){
+                    $fieldNames.='`ShowPicMethod`,';
+                    $values.=':ShowPicMethod,';
+                    $dataProperty->AddField("ShowPicMethod", $documentNews["ShowPicMethod"]);
+                }
+
+                    $fieldNames.='`IsCopy`,';
+                    $values.=':IsCopy,';
+                    $dataProperty->AddField("IsCopy", 1);
+
+                if(isset($documentNews["IsAddToFullText"])){
+                    $fieldNames.='`IsAddToFullText`,';
+                    $values.=':IsAddToFullText,';
+                    $dataProperty->AddField("IsAddToFullText", $documentNews["IsAddToFullText"]);
+                }
+                if(isset($documentNews["ClosePosition"])){
+                    $fieldNames.='`ClosePosition`,';
+                    $values.=':ClosePosition,';
+                    $dataProperty->AddField("ClosePosition", $documentNews["ClosePosition"]);
+                }
+                if(isset($documentNews["CommentCount"])){
+                    $fieldNames.='`CommentCount`,';
+                    $values.=':CommentCount,';
+                    $dataProperty->AddField("CommentCount", $documentNews["CommentCount"]);
+                }
+
+
+                $fieldNames=substr($fieldNames,0,strlen($fieldNames)-1);
+                $values=substr($values,0,strlen($values)-1);
+
                 $sql="INSERT INTO " . self::TableName_DocumentNews . "
                 (
-                    `SiteId`,
-                    `ChannelId`,
-                    `DocumentNewsTitle`,
-                    `DocumentNewsSubTitle`,
-                    `DocumentNewsCiteTitle`,
-                    `DocumentNewsShortTitle`,
-                    `DocumentNewsIntro`,
-                    `CreateDate`,
-                    `ManageUserId`,
-                    `ManageUserName`,
-                    `UserId`,
-                    `UserName`,
-                    `Author`,
-                    `DocumentNewsType`,
-                    `DirectUrl`,
-                    `DocumentNewsContent`,
-                    `ShowDate`,
-                    `SourceName`,
-                    `DocumentNewsMainTag`,
-                    `DocumentNewsTag`,
-                    `Sort`,
-                    `TitlePic1UploadFileId`,
-                    `TitlePic2UploadFileId`,
-                    `TitlePic3UploadFileId`,
-                    `DocumentNewsTitleColor`,
-                    `DocumentNewsTitleBold`,
-                    `OpenComment`,
-                    `ShowHour`,
-                    `ShowMinute`,
-                    `ShowSecond`,
-                    `UploadFiles`,
-                    `IsHot`,
-                    `RecLevel`,
-                    `WaitPublish`,
-                    `ShowPicMethod`,
-                    `IsCopy`,
-                    `IsAddToFullText`,
-                    `ClosePosition`,
-                    `LockEdit`,
-                    `LockEditDate`,
-                    `LockEditManageUserId`,
-                    `CommentCount`
+                    $fieldNames
                 )
                 VALUES
                 (
-                    :SiteId,
-                    :ChannelId,
-                    :DocumentNewsTitle,
-                    :DocumentNewsSubTitle,
-                    :DocumentNewsCiteTitle,
-                    :DocumentNewsShortTitle,
-                    :DocumentNewsIntro,
-                    :CreateDate,
-                    :ManageUserId,
-                    :ManageUserName,
-                    :UserId,
-                    :UserName,
-                    :Author,
-                    :DocumentNewsType,
-                    :DirectUrl,
-                    :DocumentNewsContent,
-                    :ShowDate,
-                    :SourceName,
-                    :DocumentNewsMainTag,
-                    :DocumentNewsTag,
-                    :Sort,
-                    :TitlePic1UploadFileId,
-                    :TitlePic2UploadFileId,
-                    :TitlePic3UploadFileId,
-                    :DocumentNewsTitleColor,
-                    :DocumentNewsTitleBold,
-                    :OpenComment,
-                    :ShowHour,
-                    :ShowMinute,
-                    :ShowSecond,
-                    :UploadFiles,
-                    :IsHot,
-                    :RecLevel,
-                    :WaitPublish,
-                    :ShowPicMethod,
-                    :IsCopy,
-                    :IsAddToFullText,
-                    :ClosePosition,
-                    :LockEdit,
-                    :LockEditDate,
-                    :LockEditManageUserId,
-                    :CommentCount
+                    $values
                 ) ;";
-                $dataProperty = new DataProperty();
-//$dataProperty->AddField("SiteId", $documentNews["SiteId"]);
-//$dataProperty->AddField("ChannelId", $documentNews["ChannelId"]);
-                $dataProperty->AddField("DocumentNewsTitle", $documentNews["DocumentNewsTitle"]);
-                $dataProperty->AddField("DocumentNewsSubTitle", $documentNews["DocumentNewsSubTitle"]);
-                $dataProperty->AddField("DocumentNewsCiteTitle", $documentNews["DocumentNewsCiteTitle"]);
-                $dataProperty->AddField("DocumentNewsShortTitle", $documentNews["DocumentNewsShortTitle"]);
-                $dataProperty->AddField("DocumentNewsIntro", $documentNews["DocumentNewsIntro"]);
-                $dataProperty->AddField("CreateDate", $documentNews["CreateDate"]);
-//$dataProperty->AddField("ManageUserId", $documentNews["ManageUserId"]);
-//$dataProperty->AddField("ManageUserName", $documentNews["ManageUserName"]);
-                $dataProperty->AddField("UserId", $documentNews["UserId"]);
-                $dataProperty->AddField("UserName", $documentNews["UserName"]);
-                $dataProperty->AddField("Author", $documentNews["Author"]);
-//$dataProperty->AddField("State", $documentNews["State"]);
-                $dataProperty->AddField("DocumentNewsType", $documentNews["DocumentNewsType"]);
-                $dataProperty->AddField("DirectUrl", $documentNews["DirectUrl"]);
-                $dataProperty->AddField("DocumentNewsContent", $documentNews["DocumentNewsContent"]);
-                $dataProperty->AddField("ShowDate", $createDate);
-                $dataProperty->AddField("SourceName", $documentNews["SourceName"]);
-                $dataProperty->AddField("DocumentNewsMainTag", $documentNews["DocumentNewsMainTag"]);
-                $dataProperty->AddField("DocumentNewsTag", $documentNews["DocumentNewsTag"]);
-//$dataProperty->AddField("Sort", $documentNews["Sort"]);
-                $dataProperty->AddField("TitlePic1UploadFileId", $documentNews["TitlePic1UploadFileId"]);
-                $dataProperty->AddField("TitlePic2UploadFileId", $documentNews["TitlePic2UploadFileId"]);
-                $dataProperty->AddField("TitlePic3UploadFileId", $documentNews["TitlePic3UploadFileId"]);
-                $dataProperty->AddField("DocumentNewsTitleColor", $documentNews["DocumentNewsTitleColor"]);
-                $dataProperty->AddField("DocumentNewsTitleBold", $documentNews["DocumentNewsTitleBold"]);
-                $dataProperty->AddField("OpenComment", $documentNews["OpenComment"]);
-                $dataProperty->AddField("ShowHour", $hour);
-                $dataProperty->AddField("ShowMinute", $minute);
-                $dataProperty->AddField("ShowSecond", $second);
-                $dataProperty->AddField("UploadFiles", $documentNews["UploadFiles"]);
-                $dataProperty->AddField("IsHot", $documentNews["IsHot"]);
-                $dataProperty->AddField("RecLevel", $documentNews["RecLevel"]);
-                $dataProperty->AddField("WaitPublish", $documentNews["WaitPublish"]);
-                $dataProperty->AddField("ShowPicMethod", $documentNews["ShowPicMethod"]);
-                $dataProperty->AddField("IsCopy", 1);
-                $dataProperty->AddField("IsAddToFullText", $documentNews["IsAddToFullText"]);
-                $dataProperty->AddField("ClosePosition", $documentNews["ClosePosition"]);
-                $dataProperty->AddField("LockEdit", $documentNews["LockEdit"]);
-                $dataProperty->AddField("LockEditDate", $documentNews["LockEditDate"]);
-                $dataProperty->AddField("LockEditManageUserId", $documentNews["LockEditManageUserId"]);
-                $dataProperty->AddField("CommentCount", $documentNews["CommentCount"]);
-
-
-                $dataProperty->AddField("ManageUserId", $manageUserId);
-                $dataProperty->AddField("ManageUserName", $manageUserName);
-
-                $dataProperty->AddField("ChannelId", $targetCid);
-                $dataProperty->AddField("SiteId", $targetSiteId);
-                $dataProperty->AddField("Sort", $sort);
 
                 $newId = $this->dbOperator->LastInsertId($sql, $dataProperty);
 

@@ -846,6 +846,8 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
                 $result = parent::PublishDocumentNews($documentNewsId, $publishQueueManageData, $executeTransfer, $publishChannel);
                 if ($result == (abs(DefineCode::PUBLISH) + BaseManageGen::PUBLISH_DOCUMENT_NEWS_RESULT_FINISHED)) {
                     $result = '';
+                    $siteManageData=new SiteManageData();
+                    $siteUrl=$siteManageData->GetSiteUrl($siteId,true);
                     for ($i = 0; $i < count($publishQueueManageData->Queue); $i++) {
 
                         $publishResult = "";
@@ -857,7 +859,7 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
                         }
 
 
-                        $result .= $publishQueueManageData->Queue[$i]["DestinationPath"] . ' -> ' . $publishResult
+                        $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'?stay=1" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$publishResult
                             . '<br />';
                     }
                 }
@@ -925,6 +927,9 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
             }
 
             //执行传输
+            $siteManageData=new SiteManageData();
+            $siteUrl=$siteManageData->GetSiteUrl($currentSiteId,true);
+
             parent::TransferPublishQueue($publishQueueManageData, $currentSiteId);
             for ($i = 0;$i< count($publishQueueManageData->Queue); $i++) {
 
@@ -934,7 +939,7 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
                     abs(DefineCode::PUBLISH) + BaseManageGen::PUBLISH_TRANSFER_RESULT_SUCCESS
                 ){
                     $publishResult = "Ok";
-                    $result .= $publishQueueManageData->Queue[$i]["DestinationPath"].' -> '.$publishResult
+                    $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'?stay=1" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$publishResult
                         .'<br />'
                     ;
                 }else{
@@ -958,7 +963,7 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
                     }
 
 
-                    $result .= $publishQueueManageData->Queue[$i]["DestinationPath"].' -> '.$channelPublishResult
+                    $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'?stay=1" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$channelPublishResult
                         .'<br />'
                     ;
                 }

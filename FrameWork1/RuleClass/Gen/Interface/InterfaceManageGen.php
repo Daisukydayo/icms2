@@ -318,45 +318,51 @@ class InterfaceManageGen extends BaseManageGen implements IBaseManageGen
                         $uploadFile = new UploadFile();
                         /** 处理题图 **/
                         //题图1
-                        $url = $arrayOfItems[$i]["TitlePic1UploadFilePath"];
-                        if (strlen($url) > 0) {
-                            if ((stripos($url, "http") != 0 || stripos($url, "http") === false)) { //不是绝对地址且不为空  则加上域名
-                                $url = $arrayOfItems[$i]["SiteUrl"] . $url;
-                            }
-                            parent::SaveRemoteImage($url, UploadFileData::UPLOAD_TABLE_TYPE_DOCUMENT_NEWS_TITLE_PIC_1, $channelId, $uploadFile); //远程上传题图1
-                            if ($uploadFile->UploadFileId > 0) {
-                                $arrayOfItems[$i]["TitlePic1UploadFileId"] = $uploadFile->UploadFileId;
-                            } else {
-                                $errorOfOne .= "<div style='margin-left:13px'>TitlePic1:" . Language::Load("interface", 7) . "</div>"; //TitlePic1:抓取题图失败！请手动上传！
+                        if(isset($arrayOfItems[$i]["TitlePic1UploadFilePath"])){
+                            $url = $arrayOfItems[$i]["TitlePic1UploadFilePath"];
+                            if (strlen($url) > 0) {
+                                if ((stripos($url, "http") != 0 || stripos($url, "http") === false)) { //不是绝对地址且不为空  则加上域名
+                                    $url = $arrayOfItems[$i]["SiteUrl"] . $url;
+                                }
+                                parent::SaveRemoteImage($url, UploadFileData::UPLOAD_TABLE_TYPE_DOCUMENT_NEWS_TITLE_PIC_1, $channelId, $uploadFile); //远程上传题图1
+                                if ($uploadFile->UploadFileId > 0) {
+                                    $arrayOfItems[$i]["TitlePic1UploadFileId"] = $uploadFile->UploadFileId;
+                                } else {
+                                    $errorOfOne .= "<div style='margin-left:13px'>TitlePic1:" . Language::Load("interface", 7) . "</div>"; //TitlePic1:抓取题图失败！请手动上传！
+                                }
                             }
                         }
                         //题图2
-                        $url = $arrayOfItems[$i]["TitlePic2UploadFilePath"];
-                        if (strlen($url) > 0) {
-                            if ((stripos($url, "http") != 0 || stripos($url, "http") === false)) { //不是绝对地址且不为空  则加上域名
-                                $url = $arrayOfItems[$i]["SiteUrl"] . $url;
-                            }
-                            parent::SaveRemoteImage($url, UploadFileData::UPLOAD_TABLE_TYPE_DOCUMENT_NEWS_TITLE_PIC_2, $channelId, $uploadFile); //远程上传题图2
-                            if ($uploadFile->UploadFileId > 0) {
-                                $arrayOfItems[$i]["TitlePic2UploadFileId"] = $uploadFile->UploadFileId;
-                            } else {
-                                $errorOfOne .= "<div style='margin-left:13px'>TitlePic2:" . Language::Load("interface", 7) . "</div>"; //TitlePic2:抓取题图失败！请手动上传！
+                        if(isset($arrayOfItems[$i]["TitlePic2UploadFilePath"])){
+                            $url = $arrayOfItems[$i]["TitlePic2UploadFilePath"];
+                            if (strlen($url) > 0) {
+                                if ((stripos($url, "http") != 0 || stripos($url, "http") === false)) { //不是绝对地址且不为空  则加上域名
+                                    $url = $arrayOfItems[$i]["SiteUrl"] . $url;
+                                }
+                                parent::SaveRemoteImage($url, UploadFileData::UPLOAD_TABLE_TYPE_DOCUMENT_NEWS_TITLE_PIC_2, $channelId, $uploadFile); //远程上传题图2
+                                if ($uploadFile->UploadFileId > 0) {
+                                    $arrayOfItems[$i]["TitlePic2UploadFileId"] = $uploadFile->UploadFileId;
+                                } else {
+                                    $errorOfOne .= "<div style='margin-left:13px'>TitlePic2:" . Language::Load("interface", 7) . "</div>"; //TitlePic2:抓取题图失败！请手动上传！
+                                }
                             }
                         }
                         //题图3
-                        $url = $arrayOfItems[$i]["TitlePic3UploadFilePath"];
-                        if (strlen($url) > 0) {
-                            if ((stripos($url, "http") != 0 || stripos($url, "http") === false)) { //不是绝对地址且不为空  则加上域名
-                                $url = $arrayOfItems[$i]["SiteUrl"] . $url;
+                        if(isset($arrayOfItems[$i]["TitlePic3UploadFilePath"])){
+                            $url = $arrayOfItems[$i]["TitlePic3UploadFilePath"];
+                            if (strlen($url) > 0) {
+                                if ((stripos($url, "http") != 0 || stripos($url, "http") === false)) { //不是绝对地址且不为空  则加上域名
+                                    $url = $arrayOfItems[$i]["SiteUrl"] . $url;
+                                }
+                                parent::SaveRemoteImage($url, UploadFileData::UPLOAD_TABLE_TYPE_DOCUMENT_NEWS_TITLE_PIC_3, $channelId, $uploadFile); //远程上传题图3
+                                if ($uploadFile->UploadFileId > 0) {
+                                    $arrayOfItems[$i]["TitlePic3UploadFileId"] = $uploadFile->UploadFileId;
+                                } else {
+                                    $errorOfOne .= "<div style='margin-left:13px'>TitlePic3:" . Language::Load("interface", 7) . "</div>"; //TitlePic3:抓取题图失败！请手动上传！
+                                }
                             }
-                            parent::SaveRemoteImage($url, UploadFileData::UPLOAD_TABLE_TYPE_DOCUMENT_NEWS_TITLE_PIC_3, $channelId, $uploadFile); //远程上传题图3
-                            if ($uploadFile->UploadFileId > 0) {
-                                $arrayOfItems[$i]["TitlePic3UploadFileId"] = $uploadFile->UploadFileId;
-                            } else {
-                                $errorOfOne .= "<div style='margin-left:13px'>TitlePic3:" . Language::Load("interface", 7) . "</div>"; //TitlePic3:抓取题图失败！请手动上传！
-                            }
-                        }
 
+                        }
                         /** 处理内容图片 **/
                         $strUploadFiles = "";
                         $preg = $preg = "/\<" . "img" . "(.*)\/>/imsU"; //取得所有 <img />的数组

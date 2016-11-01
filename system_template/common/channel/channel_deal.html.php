@@ -11,7 +11,9 @@
     <script src="/system_js/tiny_mce/editor.js?uploadfiletype=1"></script>
     <script type="text/javascript">
         <!--
-        //var editor;
+        var editor;
+
+
         $(function () {
             //editor = $('#f_ChannelIntro').xheditor();
             $("#f_CreateDate").datepicker({
@@ -310,7 +312,7 @@
         <tr>
             <td class="spe_line" height="30" align="right"><label for="f_ChannelIntro">频道介绍：</label></td>
             <td class="spe_line">
-                <textarea cols="30" rows="30" id="f_ChannelIntro"  class="mceEditor"  name="f_ChannelIntro" style="width:90%;height:250px;">{ChannelIntro}</textarea>
+                <textarea cols="30" rows="30" id="f_ChannelIntro"  class="xheditor  {internalScript:'true'}"  name="f_ChannelIntro" style="width:90%;height:250px;">{ChannelIntro}</textarea>
             </td>
         </tr>
         <tr>

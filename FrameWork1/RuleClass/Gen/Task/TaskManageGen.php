@@ -131,6 +131,9 @@ class TaskManageGen extends BaseManageGen {
 
 
 
+            //加入操作日志
+            $operateContent = 'Statistic Document Of Manage User,POST FORM:'.implode('|',$_POST).';';
+            self::CreateManageUserLog($operateContent);
 
 
             $listNameOfStatistician="statistician_result_list";
@@ -252,6 +255,10 @@ class TaskManageGen extends BaseManageGen {
 
 
 
+            //加入操作日志
+            $operateContent = 'Statistic Document Of Manage User Group,POST FORM:'.implode('|',$_POST).';';
+            self::CreateManageUserLog($operateContent);
+
 
             $listNameOfStatistician="statistician_result_list";
             Template::RemoveCustomTag($tempContent, $listNameOfStatistician);
@@ -314,6 +321,10 @@ class TaskManageGen extends BaseManageGen {
             }
 
 
+
+        //加入操作日志
+        $operateContent = 'Statistic Document Of Manage User Hit Rank,POST FORM:'.implode('|',$_POST).';';
+        self::CreateManageUserLog($operateContent);
 
 
 

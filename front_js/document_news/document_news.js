@@ -15,6 +15,9 @@ function getDocumentNewsList(pageIndex,pageSize,searchKey,pagerStyle){
     if(window.channelIdWindow!=undefined){
         channelId=window.channelIdWindow;
     }
+    if(window.pageIndexWindow!=undefined){
+        window.pageIndexWindow=pageIndex;
+    }
 
     if(channelId>0){
         $.ajax({

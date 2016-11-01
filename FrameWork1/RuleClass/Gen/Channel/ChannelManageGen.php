@@ -460,6 +460,10 @@ class ChannelManageGen extends BaseManageGen implements IBaseManageGen {
         $result = '';
         $channelId = Control::GetRequest("channel_id", -1);
         if($channelId>0){
+            $channelManageData=new ChannelManageData();
+            $siteId=$channelManageData->GetSiteId($channelId,true);
+            $siteManageData=new SiteManageData();
+            $siteUrl=$siteManageData->GetSiteUrl($siteId,true);
 
             //删除缓冲
             parent::DelAllCache();
@@ -478,7 +482,7 @@ class ChannelManageGen extends BaseManageGen implements IBaseManageGen {
                     }
 
 
-                    $result .= $publishQueueManageData->Queue[$i]["DestinationPath"].' -> '.$publishResult
+                    $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'?stay=1" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$publishResult
                         .'<br />'
                     ;
                 }
