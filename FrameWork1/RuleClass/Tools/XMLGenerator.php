@@ -480,6 +480,57 @@ class XMLGenerator {
     }
 
 
+/**
+ * 生成XML数据（只针对document news表）给今日头条
+ * @param string $channelTitle 频道标题
+ * @param string $channelDescription 频道描述
+ * @param string $channelLink 频道连接
+ * @param string $language 语言
+ * @param array $items 子项目数据
+ * @param string $pubDate 发布时间
+ * @param string $lastBuildDate 最后生成时间
+ * @param string $generator 生成者
+ * @param string $channelImgUrl 频道图标网址
+ * @return string 数据字符串（xml）
+ */
+public static function GenForDocumentNewsToJinRiTouTiao($channelTitle, $channelDescription, $channelLink, $language, $items = null, $pubDate = "", $lastBuildDate = "", $generator = "", $channelImgUrl = "") {
+    $rss = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n";
+    $rss .= "<rss version=\"2.0\">\r\n";
+    $rss .= "<channel>\r\n";
+    $rss .= "<title>".$channelTitle."</title>\r\n";
+    $rss .= "<description>".$channelDescription."</description>\r\n";
+    $rss .= "<link>".$channelLink."</link>\r\n";
+
+    if (!empty($generator))
+        $rss .= "<generator>".$generator."</generator>\r\n";
+
+    //$rss .= "<ttl>5</ttl>\r\n";
+
+    if (!empty($channelImgUrl)) {
+        $rss .= "<image>\r\n";
+        $rss .= "<url>".$channelImgUrl."</url>\r\n";
+        $rss .= "<title>".$channelTitle."</title>\r\n";
+        $rss .= "<link>".$channelLink."</link>\r\n";
+        $rss .= "</image>\r\n";
+    }
+
+    for ($i = 0; $i < count($items); $i++) {
+        $rss .= "<item>\r\n";
+        $rss .= "<title><![CDATA[".$items[$i]['DocumentNewsTitle']."]]></title>\r\n";
+        $rss .= "<link>".$items[$i]['DocumentNewsUrl']."</link>\r\n";
+        $rss .= "<description><![CDATA[".$items[$i]['DocumentNewsIntro']."]]></description>\r\n";
+        $rss .= "<source>".$items[$i]['SourceName']."</source>\r\n";
+        $itemDateStr=$items[$i]['ShowDate']." ".$items[$i]['ShowHour'].":".$items[$i]['ShowMinute'].":".$items[$i]['ShowSecond'];
+        $itemDate=date(DATE_RFC2822,strtotime($itemDateStr));
+        $rss .= "<pubDate>".$itemDate."</pubDate>"; // 最后发布时间
+        $rss .= "</item>\r\n";
+    }
+
+    $rss .= "</channel>\r\n</rss>";
+    return $rss;
+}
+
+
 
 }
 

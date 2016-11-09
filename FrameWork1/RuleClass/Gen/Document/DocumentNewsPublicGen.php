@@ -472,6 +472,11 @@ class DocumentNewsPublicGen extends BasePublicGen implements IBasePublicGen {
                         $result = XMLGenerator::GenForDocumentNewsToYiDianZiXun($channelTitle, $channelDescription, $siteUrl, $language, $resultArrList);
 
                         break;
+                    case "jrtt":
+                        $result = XMLGenerator::GenForDocumentNewsToJinRiTouTiao($channelTitle, $channelDescription, $siteUrl, $language, $resultArrList);
+
+                        break;
+
                     default:
                         $result = XMLGenerator::GenForDocumentNews($channelTitle, $channelDescription, $channelLink, $language, $resultArrList);
 
