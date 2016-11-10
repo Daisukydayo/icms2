@@ -27,6 +27,19 @@ class Ftp
     private $Timeout;
     private $SiteId;
 
+    function __construct(){
+        //parent::__construct();
+        $this->FtpId = "";
+        $this->FtpHost = "";
+        $this->FtpPort = "";
+        $this->FtpUser = "";
+        $this->FtpPass = "";
+        $this->RemotePath = "";
+        $this->PasvMode = "";
+        $this->Timeout = "";
+        $this->SiteId = "";
+    }
+
     /**
      * @param mixed $FtpHost
      */
@@ -177,9 +190,8 @@ class Ftp
      * @return string 配置值
      */
     public function __get($fieldName){
-        $funcName = "get$fieldName";
-        if(function_exists($funcName)){
-            return $this->$funcName();
+        if(isset($this->$fieldName)){
+            return $this->$fieldName;
         }else{
             return null;
         }
@@ -190,9 +202,6 @@ class Ftp
      * @param string $fieldValue 配置值
      */
     public function __set($fieldName,$fieldValue){
-        $funcName = "set$fieldName";
-        if(function_exists($funcName)){
-            $this->$funcName($fieldValue);
-        }
+        $this->$fieldName = $fieldValue;
     }
 } 

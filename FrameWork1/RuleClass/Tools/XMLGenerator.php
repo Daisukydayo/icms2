@@ -517,7 +517,7 @@ public static function GenForDocumentNewsToJinRiTouTiao($channelTitle, $channelD
     for ($i = 0; $i < count($items); $i++) {
         $rss .= "<item>\r\n";
         $rss .= "<title><![CDATA[".$items[$i]['DocumentNewsTitle']."]]></title>\r\n";
-        $rss .= "<link>".$items[$i]['DocumentNewsUrl']."</link>\r\n";
+        $rss .= "<link><![CDATA[".$items[$i]['DocumentNewsUrl']."]]></link>\r\n";
         $rss .= "<description><![CDATA[".$items[$i]['DocumentNewsIntro']."]]></description>\r\n";
         $rss .= "<source>".$items[$i]['SourceName']."</source>\r\n";
         $itemDateStr=$items[$i]['ShowDate']." ".$items[$i]['ShowHour'].":".$items[$i]['ShowMinute'].":".$items[$i]['ShowSecond'];

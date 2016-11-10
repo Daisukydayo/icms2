@@ -321,6 +321,25 @@ class SiteManageData extends BaseManageData {
         return $result;
     }
 
+    /**
+     * 返回发布模式（本地，ftp)
+     * @param int $siteId 站点id
+     * @param bool $withCache 是否从缓冲中取
+     * @return int|null
+     */
+    public function GetPublishType($siteId, $withCache=false){
+        $result = null;
+        if($siteId>0){
+            $cacheDir = CACHE_PATH . DIRECTORY_SEPARATOR . 'site_data';
+            $cacheFile = 'site_get_site_publish_type.cache_' . $siteId . '';
+            $sql = "SELECT PublishType FROM " . self::TableName_Site . " WHERE SiteId=:SiteId;";
+            $dataProperty = new DataProperty();
+            $dataProperty->AddField("SiteId", $siteId);
+            $result = $this->GetInfoOfIntValue($sql, $dataProperty, $withCache, $cacheDir, $cacheFile);
+        }
+        return $result;
+    }
+
 
     /**
      * 修改站点题图的上传文件id
@@ -374,6 +393,34 @@ class SiteManageData extends BaseManageData {
         return $result;
     }
 
+
+    /**
+     * 取得是否分表设置
+     * @param int $siteId 站点id
+     * @param bool $withCache 是否从缓冲中取
+     * @return int 是否分表的设置码
+     */
+    public function GetIsSeparateDataTable($siteId, $withCache=false)
+    {
+        $result = -1;
+        if ($siteId > 0) {
+            $cacheDir = CACHE_PATH . DIRECTORY_SEPARATOR . 'site_data';
+            $cacheFile = 'site_get_is_separate_data_table.cache_' . $siteId . '';
+            $sql = "SELECT IsSeparateDataTable FROM " . self::TableName_Site . "
+
+                    WHERE SiteId = :SiteId;";
+            $dataProperty = new DataProperty();
+            $dataProperty->AddField("SiteId", $siteId);
+            $result = $this->GetInfoOfIntValue(
+                $sql,
+                $dataProperty,
+                $withCache,
+                $cacheDir,
+                $cacheFile
+            );
+        }
+        return $result;
+    }
 }
 
 ?>

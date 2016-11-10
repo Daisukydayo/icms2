@@ -180,7 +180,7 @@ class FtpManageData extends BaseManageData {
             if (!empty($arr["RemotePath"])) {
                 $ftp->RemotePath = strval($arr["RemotePath"]);
             }
-            if (!empty($arr["PasvMode"])) {
+            if (isset($arr["PasvMode"])) {  //如果是0 !empty会返回false
                 $ftp->PasvMode = strval($arr["PasvMode"]);
             }
             if (!empty($arr["Timeout"])) {

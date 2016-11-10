@@ -1436,14 +1436,19 @@ class BaseManageGen extends BaseGen
      */
     public function TransferPublishQueue(PublishQueueManageData $publishQueueManageData, $siteId)
     {
+
         $ftpManageData = new FtpManageData();
         $ftp = new Ftp();
         $arrFtpOne = $ftpManageData->GetOneBySiteId($siteId);
+        $siteManageData=new SiteManageData();
+
+        $publishType = $siteManageData->GetPublishType($siteId,true);
         $ftpManageData->FillFtp($arrFtpOne, $ftp);
 
 
+
         //判断是用ftp方式传输还是直接写文件方式传输
-        if (!empty($ftpInfo)) { //定义了ftp配置信息，使用ftp方式传输
+        if (!empty($ftp)&&$publishType==1) { //定义了ftp配置信息，使用ftp方式传输
             $openFtpLog = false;
             $ftpLogManageData = new FtpLogManageData();
             FtpTools::UploadQueue($ftp, $publishQueueManageData, $openFtpLog, $ftpLogManageData);

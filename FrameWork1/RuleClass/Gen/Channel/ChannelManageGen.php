@@ -481,8 +481,13 @@ class ChannelManageGen extends BaseManageGen implements IBaseManageGen {
                         $publishResult = "Ok";
                     }
 
+                    if (intval($publishQueueManageData->Queue[$i]["Result"]) ==
+                        abs(DefineCode::FTP) + FtpTools::FTP_TRANSFER_SUCCESS
+                    ) {
+                        $publishResult = "FtpOk";
+                    }
 
-                    $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'?stay=1" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$publishResult
+                    $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$publishResult
                         .'<br />'
                     ;
                 }

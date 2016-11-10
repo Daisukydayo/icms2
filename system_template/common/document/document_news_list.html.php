@@ -250,7 +250,7 @@
                             <td class="spe_line2" style="width:50px;text-align:center;" title="文档的是否上首页，用在特定的模板中">{f_ShowIndex}</td>
                             <td class="spe_line2" style="width:50px;text-align:center;">{f_Hit}</td>
                             <td class="spe_line2" style="width:180px;text-align:center;" title="文档创建时间">{f_CreateDate}</td>
-                            <td class="spe_line2" style="width:100px;text-align:center;" title="发稿人：{f_ManageUserName}">{f_ManageUserName}</td>
+                            <td class="spe_line2" style="width:100px;text-align:center;" title="id：{f_ManageUserId}">{f_ManageUserName}</td>
                             <td class="spe_line2" style="width:40px;text-align:center;">
                                 <img class="btn_manage_pic" src="/system_template/{template_name}/images/manage/pic.gif" idvalue="{f_DocumentNewsId}" alt="图片管理" title="文档中上传的图片管理"/>
                                 <a href="/default.php?secu=manage&mod=comment&m=list&table_id={f_DocumentNewsId}&site_id={SiteId}&table_type=7"><img class="btn_manage_comment" src="/system_template/{template_name}/images/manage/comment.gif" idvalue="{f_DocumentNewsId}" alt="评论管理" title="文档的评论管理"/></a>

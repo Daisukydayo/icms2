@@ -147,11 +147,11 @@ class FtpTools
         if (empty($arrUpload)) {
             return DefineCode::FTP + self::FTP_CONTENT_EMPTY; //上传数组为空
         }
-        if (!isset($ftp->FtpUser) ||
-            !isset($ftp->FtpPass) ||
-            !isset($ftp->PasvMode) ||
-            !isset($ftp->RemotePath) ||
-            !isset($ftp->FtpId)
+        if ($ftp->FtpUser=="" ||
+            $ftp->FtpPass=="" ||
+            $ftp->PasvMode=="" ||
+            $ftp->RemotePath=="" ||
+            $ftp->FtpId==""
         ) {
             return DefineCode::FTP + self::FTP_INFO_EMPTY; //FTP配置信息为空
         }
@@ -195,8 +195,10 @@ class FtpTools
                 );
                 if ($uploadResult == abs(DefineCode::FTP) + self::FTP_TRANSFER_SUCCESS) {
                     $arrUpload[$i]["result"] = abs(DefineCode::FTP) + self::FTP_TRANSFER_SUCCESS;
+                    $publishQueueManageData->Queue[$i]["Result"] = abs(DefineCode::FTP) + self::FTP_TRANSFER_SUCCESS;
                 } else {
                     $arrUpload[$i]["result"] = DefineCode::FTP + self::FTP_TRANSFER_FAILURE;
+                    $publishQueueManageData->Queue[$i]["Result"] = DefineCode::FTP + self::FTP_TRANSFER_FAILURE;
                 }
             }
             $result = abs(DefineCode::FTP) + self::FTP_TRANSFER_FINISHED; //操作完成，但不代表所有文件操作成功
@@ -285,9 +287,9 @@ class FtpTools
             return DefineCode::FTP + self::FTP_DESTINATION_EMPTY;
         }
 
+        $destinationPath = $ftpPath . "/" . $destinationPath; //要生成的目标文件地址
         $dirName = dirname($destinationPath); //目标文件地址
         $fileName = basename($destinationPath); //目标文件名
-        $destinationPath = $ftpPath . "/" . $destinationPath; //要生成的目标文件地址
 
         if (strlen($sourceContent) > 0) { //发布内容上传
             $sourceFileContent = $sourceContent;
@@ -295,8 +297,8 @@ class FtpTools
             $rand = rand("111", "9999");
             $randPath = $microTime . $rand;
             $sourcePath =
-                PHYSICAL_PATH . DIRECTORY_SEPARATOR .
                 CACHE_PATH . DIRECTORY_SEPARATOR . 'ftp_temp' . DIRECTORY_SEPARATOR . $siteId . DIRECTORY_SEPARATOR . $randPath . DIRECTORY_SEPARATOR . $fileName; //源文件绝对路径        //源服务器路径
+
             FileObject::Write($sourcePath, $sourceFileContent);
         } else { //附件文件上传
             $sourcePath = realpath(RELATIVE_PATH . $sourcePath); //源文件路径
@@ -307,6 +309,7 @@ class FtpTools
         if (!$changeOrMakeDirResult) {
             $result = DefineCode::FTP + self::FTP_CHANGE_OR_MAKE_DIR_FAILURE;
         } else {
+            $sourcePath = PHYSICAL_PATH . $sourcePath;  //补丁 加上文件系统绝对地址
             if (ftp_put($ftpConnect, $fileName, $sourcePath, FTP_BINARY)) {
                 $result = abs(DefineCode::FTP) + self::FTP_TRANSFER_SUCCESS;
             } else {
@@ -336,21 +339,26 @@ class FtpTools
     {
         $ftpConnect = null;
         @set_time_limit(0);
-        //取得ftp配置信息
-        $connectFunction = function_exists('ftp_ssl_connect') ? 'ftp_ssl_connect' : 'ftp_connect';
+        //取得ftp配置信息\
+
+        //暂默认用ftp_connect
+        /*$connectFunction = function_exists('ftp_ssl_connect') ? 'ftp_ssl_connect' : 'ftp_connect';
+
         if ($connectFunction == 'ftp_connect' && !function_exists('ftp_connect')) { //判断PHP是否支持FTP
             return false;
-        }
+        }*/
+        $connectFunction= 'ftp_connect';
+
 
         //判断ftp info
-        if (isset($ftp->FtpHost) && isset($ftp->FtpPort)) {
+        if ($ftp->FtpHost!="" && $ftp->FtpPort!="") {
             $ftpHost = $ftp->FtpHost;
             $ftpPort = 21;
-            if (isset($ftp->FtpPort)) {
+            if ($ftp->FtpPort!="") {
                 $ftpPort = intval($ftp->FtpPort);
             }
             $ftpTimeout = 90;
-            if (isset($ftp->Timeout)) {
+            if ($ftp->Timeout!="") {
                 $ftpTimeout = intval($ftp->Timeout);
             }
             $ftpConnect = @$connectFunction($ftpHost, $ftpPort, $ftpTimeout);
@@ -404,13 +412,11 @@ class FtpTools
     private static function MakeDir($ftpConnect, $dirPath)
     {
         $arrPath = explode("/", $dirPath);
-        $dir = '';
-        $separator = '';
         foreach ($arrPath as $path) { //循环创建文件夹
-            $dir .= $separator . $path;
-            $separator = "/";
-            if (!ftp_mkdir($ftpConnect, $dir)) {
-                return FALSE;
+            if(!@ftp_chdir($ftpConnect, $path)){
+                ftp_mkdir($ftpConnect, $path);
+                ftp_chdir($ftpConnect, $path);
+                //ftp_chmod($ftpcon, 0777, $part);
             }
         }
         return true;

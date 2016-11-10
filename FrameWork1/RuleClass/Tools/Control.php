@@ -692,5 +692,36 @@ class Control {
         curl_close( $ch );
         return $response;
     }
+
+
+
+
+    /**
+     * 写入后台当前管理站点cookie
+     * @param int $siteId 后台帐号id
+     * @param int $hour 保存时间（单位小时），默认1小时
+     * @param string $domain 保存路径，默认""
+     */
+    public static function SetSiteIdCookie($siteId, $hour = 1, $domain = "") {
+        if (!empty($domain)) {
+            setcookie('ICMS_SITE_ID', $siteId, time() + $hour * 3600, "/", $domain);
+        } else {
+            setcookie('ICMS_SITE_ID', $siteId, time() + $hour * 3600, "/");
+        }
+    }
+
+
+    /**
+     * 从cookie中取得当前site id
+     * @return int 返回后台管理员id
+     */
+    public static function GetSiteId() {
+        if (isset($_COOKIE["ICMS_SITE_ID"])) {
+            return intval($_COOKIE["ICMS_SITE_ID"]);
+        } else {
+            return -1;
+        }
+    }
+
 }
 ?>

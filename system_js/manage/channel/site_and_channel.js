@@ -61,10 +61,17 @@ $(function () {
         var firstSite = divSelectSiteList.find("div:first-child");
         if (firstSite != undefined) {
 
-            var siteId = firstSite.attr("idvalue");
+            var siteId=getcookie("ICMS_SITE_ID");
+            var siteDom;
+            if(siteId!=undefined&&parseInt(siteId)>0){
+                siteDom=$(".select_site_item[idvalue='"+siteId+"']");
+            }else{
+                siteId = firstSite.attr("idvalue");
+                siteDom = firstSite;
+            }
             if (siteId != undefined) {
-                var siteName = firstSite.html();
-                var siteUrl = firstSite.attr("title");
+                var siteName = siteDom.html();
+                var siteUrl = siteDom.attr("title");
 
                 divNowSelectedSite.attr("idvalue", siteId);
                 divNowSelectedSite.html(siteName);
@@ -165,6 +172,7 @@ function LoadSite(siteId, siteName, siteUrl) {
     if (window.G_NowSiteId > 0) {
         $("#div_manage_menu_of_column").html("<img style='margin:10px;' src='/system_template/common/images/spinner2.gif' />");
         _LoadChannelListForManage(siteId);
+        setcookie("ICMS_SITE_ID",siteId);
         //site name
         $(".site_name").html("<a href='" + siteUrl + "' target='_blank'>" + siteName + "</a>");
         if (siteUrl.length > 1) {

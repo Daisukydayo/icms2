@@ -857,9 +857,14 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
                         ) {
                             $publishResult = "Ok";
                         }
+                        if (intval($publishQueueManageData->Queue[$i]["Result"]) ==
+                            abs(DefineCode::FTP) + FtpTools::FTP_TRANSFER_SUCCESS
+                        ) {
+                            $publishResult = "FtpOk";
+                        }
 
 
-                        $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'?stay=1" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$publishResult
+                        $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$publishResult
                             . '<br />';
                     }
                 }
@@ -939,9 +944,17 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
                     abs(DefineCode::PUBLISH) + BaseManageGen::PUBLISH_TRANSFER_RESULT_SUCCESS
                 ){
                     $publishResult = "Ok";
-                    $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'?stay=1" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$publishResult
+                    $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$publishResult
                         .'<br />'
                     ;
+                }else if(intval($publishQueueManageData->Queue[$i]["Result"]) ==
+                    abs(DefineCode::FTP) + FtpTools::FTP_TRANSFER_SUCCESS
+                ) {
+                    $publishResult = "FtpOk";
+                    $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$publishResult
+                        .'<br />'
+                    ;
+
                 }else{
                     $result .= "<span style='color:red'>ERROR</span><br />";
                 }
@@ -960,10 +973,15 @@ class DocumentNewsManageGen extends BaseManageGen implements IBaseManageGen
                         abs(DefineCode::PUBLISH) + BaseManageGen::PUBLISH_TRANSFER_RESULT_SUCCESS
                     ){
                         $channelPublishResult = "Ok";
+                    }else if(intval($publishQueueManageData->Queue[$i]["Result"]) ==
+                        abs(DefineCode::FTP) + FtpTools::FTP_TRANSFER_SUCCESS
+                    ) {
+                        $channelPublishResult = "FtpOk";
+
                     }
 
 
-                    $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'?stay=1" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$channelPublishResult
+                    $result .= '<a href="'.$siteUrl.'/'.$publishQueueManageData->Queue[$i]["DestinationPath"].'" target="_blank">'.$publishQueueManageData->Queue[$i]["DestinationPath"].'</a> -> '.$channelPublishResult
                         .'<br />'
                     ;
                 }
